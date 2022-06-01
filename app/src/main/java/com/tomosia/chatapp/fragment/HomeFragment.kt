@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentHomeBinding
 
@@ -16,15 +15,7 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentHomeBinding.inflate(inflater)
-
-        // Navigate
-        binding.btnSignup.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_registerFragment)
-        }
-        binding.btnLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
-        }
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         return binding.root
     }

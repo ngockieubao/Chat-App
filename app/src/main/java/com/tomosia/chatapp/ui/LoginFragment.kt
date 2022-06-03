@@ -1,24 +1,24 @@
 package com.tomosia.chatapp.ui
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentLoginBinding
-import com.tomosia.chatapp.util.TextUtils
+import com.tomosia.chatapp.viewmodel.LoginRegistViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
 
-    private lateinit var auth: FirebaseAuth
+
+    private val loginRegistViewModel: LoginRegistViewModel by sharedViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,18 +27,41 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentLoginBinding.inflate(inflater, container, false)
 
-        //
-        auth = Firebase.auth
+        var email: String? = null
+        var passwd: String? = null
+
+        binding.edtEmailLogin.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null)
+                    email = s.toString()
+            }
+        })
+
+        binding.edtPasswdLogin.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null)
+                    passwd = s.toString()
+            }
+        })
 
         //
         binding.btnSignin.setOnClickListener {
-            try {
-                val getEmail = binding.edtNameLogin.text.toString()
-                val getPasswd = binding.edtPasswdLogin.text.toString()
-                signIn(getEmail, getPasswd)
-            } catch (ex: IllegalArgumentException) {
-                Toast.makeText(requireActivity(), "Fields is not empty", Toast.LENGTH_SHORT).show()
-            }
+            loginRegistViewModel.signIn(email!!, passwd!!)
+            Log.d(TAG, "email: ${loginRegistViewModel.regist.value?.email} - passwd: ${loginRegistViewModel.regist.value?.passwd} ")
+        }
+
+        loginRegistViewModel.login.observe(this.viewLifecycleOwner) {
+            if (it != null)
+                Log.d(TAG, "$it")
+            navToHome()
         }
 
         // Navigate
@@ -49,28 +72,6 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
-    // Sign-in
-    private fun signIn(email: String, passwd: String) {
-        if (TextUtils.isValidEmail(email)) {
-            auth.signInWithEmailAndPassword(email, passwd)
-                .addOnSuccessListener {
-                    // check email
-                    if (email == auth.currentUser!!.email) {
-                        navToHome()
-                    }
-                }
-                .addOnCompleteListener(requireActivity()) { task ->
-                    if (task.isSuccessful) {
-                        Log.d(TAG, "signIn: success")
-                        Toast.makeText(requireActivity(), "Login success", Toast.LENGTH_SHORT).show()
-                    }
-                }.addOnFailureListener(requireActivity()) { exception ->
-                    Log.d(TAG, "signIn: failed")
-                    Toast.makeText(requireActivity(), "Login failed", Toast.LENGTH_SHORT).show()
-                }
-        }
-    }
-
     private fun navToHome() {
         findNavController().navigate(R.id.action_loginFragment_to_homeFragment)
     }
@@ -79,8 +80,8 @@ class LoginFragment : Fragment() {
         findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
     }
 
-    // TODO forgot password
-    // use email verify
+// TODO forgot password
+// use email verify
 
     companion object {
         private const val TAG = "login"

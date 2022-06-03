@@ -1,6 +1,8 @@
 package com.tomosia.chatapp.ui
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,17 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentRegisterBinding
-import com.tomosia.chatapp.util.TextUtils
+import com.tomosia.chatapp.viewmodel.LoginRegistViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
 
-    private lateinit var auth: FirebaseAuth
+    private val loginRegistViewModel: LoginRegistViewModel by sharedViewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,58 +26,51 @@ class RegisterFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
+        var email: String? = null
+        var passwd: String? = null
 
-        auth = Firebase.auth
+        binding.edtEmailRegister.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
-        checkCurrentUser()
-        binding.btnSignup.setOnClickListener {
-            try {
-                val email = binding.edtEmailRegister.text.toString()
-                val passwd = binding.edtPasswdRegister.text.toString()
-                createAccount(email, passwd)
-            } catch (ex: IllegalArgumentException) {
-                Toast.makeText(requireActivity(), "Fields is not empty", Toast.LENGTH_SHORT).show()
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null) {
+                    email = s.toString()
+                } else
+                    Toast.makeText(requireActivity(), "Email is not empty", Toast.LENGTH_SHORT).show()
             }
+        })
+
+        binding.edtPasswdRegister.addTextChangedListener(object : TextWatcher {
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (s != null) {
+                    passwd = s.toString()
+                } else
+                    Toast.makeText(requireActivity(), "Password is not empty", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        binding.btnSignup.setOnClickListener {
+            loginRegistViewModel.createAccount(email!!, passwd!!)
+            Log.d(TAG, "email: ${loginRegistViewModel.regist.value?.email} - passwd: ${loginRegistViewModel.regist.value?.passwd} ")
         }
+
+        loginRegistViewModel.regist.observe(this.viewLifecycleOwner) {
+            if (it != null)
+                Log.d(TAG, "$it")
+            navToHome()
+        }
+
         binding.tvNavToLogin.setOnClickListener {
             navToLogIn()
         }
 
         return binding.root
-    }
-
-    // Checkout user accounts
-    private fun checkCurrentUser() {
-        val user = Firebase.auth.currentUser
-        if (user != null) {
-            //
-        } else {
-            // Stay at register fragment
-        }
-    }
-
-    // Create account
-    private fun createAccount(email: String, passwd: String) {
-        // Start create user
-        if (TextUtils.isValidEmail(email)) {
-            auth.createUserWithEmailAndPassword(email, passwd)
-                .addOnSuccessListener {
-                    navToHome()
-                }
-                .addOnCompleteListener(requireActivity()) { task ->
-                    if (task.isSuccessful) {
-                        // Sign-in success, update UI with user's info signed-in success
-                        Log.d(TAG, "createAccount: success")
-                        Toast.makeText(requireActivity(), "Register success", Toast.LENGTH_SHORT).show()
-                        // Update UI with user's info signed-in success
-//                    val user = auth.currentUser
-//                    updateUI(user)
-                    }
-                }.addOnFailureListener(requireActivity()) { task ->
-                    Log.d(TAG, "${task.message}")
-                    Toast.makeText(requireActivity(), "Register failed", Toast.LENGTH_SHORT).show()
-                }
-        }
     }
 
     private fun navToLogIn() {

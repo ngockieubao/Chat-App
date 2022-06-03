@@ -1,10 +1,13 @@
 package com.tomosia.chatapp.ui.home
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.databinding.FragmentHomeBinding
@@ -43,5 +46,9 @@ class HomeFragment : Fragment() {
             // Check if user's email is verified
             val emailVerified = user.isEmailVerified
         }
+    }
+
+    companion object{
+        private const val TAG = "home"
     }
 }

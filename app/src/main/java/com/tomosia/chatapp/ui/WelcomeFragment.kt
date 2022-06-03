@@ -45,13 +45,13 @@ class WelcomeFragment : Fragment() {
         // check cur user
         val currentUser = auth.currentUser
         if (currentUser != null)
-//            login()
+            navToHome()
         else {
             // stay at welcome fragment
         }
     }
 
-    private fun login() {
-        findNavController().navigate(R.id.action_welcomeFragment_to_loginFragment)
+    private fun navToHome() {
+        findNavController().navigate(R.id.action_welcomeFragment_to_homeFragment)
     }
 }

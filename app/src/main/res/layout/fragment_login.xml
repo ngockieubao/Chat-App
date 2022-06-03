@@ -34,7 +34,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView_login" />
 
         <EditText
-            android:id="@+id/edt_name_login"
+            android:id="@+id/edt_email_login"
             android:layout_width="270dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -56,7 +56,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.195"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_name_login" />
+            app:layout_constraintTop_toBottomOf="@+id/edt_email_login" />
 
         <EditText
             android:id="@+id/edt_passwd_login"

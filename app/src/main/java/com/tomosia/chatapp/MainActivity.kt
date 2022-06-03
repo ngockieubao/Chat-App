@@ -21,6 +21,16 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val navController = this.findNavController(R.id.actNavHost)
+        if (!navController.popBackStack()) {
+            // Call finish() on your Activity
+            finish()
+        }
+    }
+
     companion object {
         private const val TAG = "MainActivity"
     }

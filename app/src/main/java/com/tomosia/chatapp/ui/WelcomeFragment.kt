@@ -1,4 +1,4 @@
-package com.tomosia.chatapp.fragment
+package com.tomosia.chatapp.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.tomosia.chatapp.fragment
+package com.tomosia.chatapp.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +13,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentRegisterBinding
+import com.tomosia.chatapp.util.TextUtils
 
 class RegisterFragment : Fragment() {
     private lateinit var binding: FragmentRegisterBinding
@@ -49,7 +50,7 @@ class RegisterFragment : Fragment() {
     private fun checkCurrentUser() {
         val user = Firebase.auth.currentUser
         if (user != null) {
-//            navToLogIn()
+            //
         } else {
             // Stay at register fragment
         }
@@ -58,25 +59,33 @@ class RegisterFragment : Fragment() {
     // Create account
     private fun createAccount(email: String, passwd: String) {
         // Start create user
-        auth.createUserWithEmailAndPassword(email, passwd)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    // Sign-in success, update UI with user's info signed-in success
-                    Log.d(TAG, "createAccount: success")
-                    Toast.makeText(requireActivity(), "Register success", Toast.LENGTH_SHORT).show()
-//                    navToLogIn()
-                    // Update UI with user's info signed-in success
+        if (TextUtils.isValidEmail(email)) {
+            auth.createUserWithEmailAndPassword(email, passwd)
+                .addOnSuccessListener {
+                    navToHome()
+                }
+                .addOnCompleteListener(requireActivity()) { task ->
+                    if (task.isSuccessful) {
+                        // Sign-in success, update UI with user's info signed-in success
+                        Log.d(TAG, "createAccount: success")
+                        Toast.makeText(requireActivity(), "Register success", Toast.LENGTH_SHORT).show()
+                        // Update UI with user's info signed-in success
 //                    val user = auth.currentUser
 //                    updateUI(user)
+                    }
+                }.addOnFailureListener(requireActivity()) { task ->
+                    Log.d(TAG, "${task.message}")
+                    Toast.makeText(requireActivity(), "Register failed", Toast.LENGTH_SHORT).show()
                 }
-            }.addOnFailureListener(requireActivity()) { task ->
-                Log.d(TAG, "${task.message}")
-                Toast.makeText(requireActivity(), "Register failed", Toast.LENGTH_SHORT).show()
-            }
+        }
     }
 
     private fun navToLogIn() {
         findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+    }
+
+    private fun navToHome() {
+        findNavController().navigate(R.id.action_registerFragment_to_homeFragment)
     }
 
     companion object {

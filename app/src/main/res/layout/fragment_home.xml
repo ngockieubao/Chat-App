@@ -47,11 +47,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imgv_chat_home"
+                android:id="@+id/imgv_signout_home"
                 android:layout_width="29dp"
                 android:layout_height="33dp"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_edit_64"
+                android:src="@mipmap/ic_exit_64"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/tv_title_home"

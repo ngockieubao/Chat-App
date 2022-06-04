@@ -1,19 +1,23 @@
 package com.tomosia.chatapp.ui.home
 
-import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.databinding.FragmentHomeBinding
+import com.tomosia.chatapp.model.login.LoginRegistViewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
+
+    private val loginRegistViewModel: LoginRegistViewModel by sharedViewModel()
+
+    private lateinit var dialog: SignOutDialog
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -21,17 +25,12 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        return binding.root
-    }
-
-    // Check current user
-    private fun checkCurrentUser() {
-        val user = Firebase.auth.currentUser
-        if (user != null) {
-            // User is signed in
-        } else {
-            // No user is signed in
+        dialog = SignOutDialog()
+        binding.imgvSignoutHome.setOnClickListener {
+            dialog.show(parentFragmentManager, "sign_out")
         }
+
+        return binding.root
     }
 
     // Get user's profile
@@ -48,7 +47,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    companion object{
+    companion object {
         private const val TAG = "home"
     }
 }

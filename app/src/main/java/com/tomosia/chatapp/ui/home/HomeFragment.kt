@@ -33,20 +33,6 @@ class HomeFragment : Fragment() {
         return binding.root
     }
 
-    // Get user's profile
-    private fun getUserProfile() {
-        val user = Firebase.auth.currentUser
-        user?.let {
-            // Username, email, photoUrl
-            val username = user.displayName
-            val email = user.email
-            val photoUrl = user.photoUrl
-
-            // Check if user's email is verified
-            val emailVerified = user.isEmailVerified
-        }
-    }
-
     companion object {
         private const val TAG = "home"
     }

@@ -1,4 +1,4 @@
-package com.tomosia.chatapp.model
+package com.tomosia.chatapp.model.chat
 
 data class Message(
     val avatar: String,

@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentRegisterBinding
-import com.tomosia.chatapp.viewmodel.LoginRegistViewModel
+import com.tomosia.chatapp.model.login.LoginRegistViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RegisterFragment : Fragment() {
@@ -28,8 +28,6 @@ class RegisterFragment : Fragment() {
         binding = FragmentRegisterBinding.inflate(inflater, container, false)
         var email: String? = null
         var passwd: String? = null
-
-        loginRegistViewModel.checkCurrentUser()
 
         binding.edtEmailRegister.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

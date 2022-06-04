@@ -1,4 +1,4 @@
-package com.tomosia.chatapp.viewmodel
+package com.tomosia.chatapp.model.login
 
 import android.util.Log
 import android.widget.Toast
@@ -9,7 +9,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.ChatApplication
-import com.tomosia.chatapp.model.LoginRegist
 import com.tomosia.chatapp.util.TextUtils
 
 class LoginRegistViewModel() : ViewModel() {
@@ -54,6 +53,8 @@ class LoginRegistViewModel() : ViewModel() {
                     Log.d(TAG, "${task.message}")
                     Toast.makeText(context, "Register failed", Toast.LENGTH_SHORT).show()
                 }
+        } else {
+            Toast.makeText(context, "Invalid email format", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -62,7 +63,7 @@ class LoginRegistViewModel() : ViewModel() {
         if (TextUtils.isValidEmail(email)) {
             auth.signInWithEmailAndPassword(email, passwd)
                 .addOnSuccessListener {
-                    // Check email
+                    // Check user email
                     if (email == auth.currentUser!!.email) {
                         val getLogin = LoginRegist(email, passwd)
                         _login.value = getLogin
@@ -74,10 +75,16 @@ class LoginRegistViewModel() : ViewModel() {
                         Toast.makeText(context, "Login success", Toast.LENGTH_SHORT).show()
                     }
                 }.addOnFailureListener() { exception ->
-                    Log.d(TAG, exception.toString())
+                    Log.d(TAG, "$exception")
                     Toast.makeText(context, "The password is not correct", Toast.LENGTH_SHORT).show()
                 }
-        }
+        } else
+            Toast.makeText(context, "Invalid email format", Toast.LENGTH_SHORT).show()
+    }
+
+    // Sign-out
+    fun signOut(){
+        Firebase.auth.signOut()
     }
 
     companion object {

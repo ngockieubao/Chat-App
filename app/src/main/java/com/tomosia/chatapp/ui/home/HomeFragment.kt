@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.databinding.FragmentHomeBinding
+import com.tomosia.chatapp.model.chat.ChatViewModel
 import com.tomosia.chatapp.model.login.LoginRegistViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -15,6 +16,7 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
     private val loginRegistViewModel: LoginRegistViewModel by sharedViewModel()
+    private val chatViewModel: ChatViewModel by sharedViewModel()
 
     private lateinit var dialog: SignOutDialog
 
@@ -29,6 +31,9 @@ class HomeFragment : Fragment() {
         binding.imgvSignoutHome.setOnClickListener {
             dialog.show(parentFragmentManager, "sign_out")
         }
+
+        chatViewModel.addMessageData()
+        chatViewModel.readMessageData()
 
         return binding.root
     }

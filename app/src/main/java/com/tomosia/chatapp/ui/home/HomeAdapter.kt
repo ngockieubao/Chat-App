@@ -2,14 +2,14 @@ package com.tomosia.chatapp.ui.home
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tomosia.chatapp.databinding.RcvMessageContentBinding
+import com.tomosia.chatapp.databinding.RcvHomeMessageBinding
 import com.tomosia.chatapp.model.chat.Message
 
 class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 
     val messageList = listOf<Message>()
 
-    class HomeViewHolder(private val rcvMessageContentBinding: RcvMessageContentBinding) : RecyclerView.ViewHolder(rcvMessageContentBinding.root) {
+    class HomeViewHolder(private val rcvMessageContentBinding: RcvHomeMessageBinding) : RecyclerView.ViewHolder(rcvMessageContentBinding.root) {
 
     }
 

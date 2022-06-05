@@ -65,7 +65,7 @@
             app:layout_constraintBottom_toTopOf="@+id/linear_footer_home"
             app:layout_constraintTop_toBottomOf="@+id/linear_header_home"
             tools:itemCount="5"
-            tools:listitem="@layout/rcv_message_content" />
+            tools:listitem="@layout/rcv_home_message" />
 
         <LinearLayout
             android:id="@+id/linear_footer_home"

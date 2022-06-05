@@ -1,10 +1,13 @@
 package com.tomosia.chatapp.ui.home
 
+import android.graphics.Color
+import android.graphics.ColorFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.databinding.FragmentHomeBinding
@@ -31,6 +34,20 @@ class HomeFragment : Fragment() {
         binding.imgvSignoutHome.setOnClickListener {
             dialog.show(parentFragmentManager, "sign_out")
         }
+
+        binding.imgvContactsHome.setOnClickListener {
+            binding.imgvContactsHome.setColorFilter(Color.BLUE)
+            binding.imgvMessageHome.setColorFilter(Color.WHITE)
+
+        }
+
+        binding.imgvMessageHome.setOnClickListener {
+            binding.imgvMessageHome.setColorFilter(Color.BLUE)
+            binding.imgvContactsHome.setColorFilter(Color.WHITE)
+        }
+
+        chatViewModel.addMessageData()
+        chatViewModel.readMessageData()
 
         return binding.root
     }

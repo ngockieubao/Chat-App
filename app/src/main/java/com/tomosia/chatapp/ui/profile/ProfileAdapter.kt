@@ -2,12 +2,12 @@ package com.tomosia.chatapp.ui.profile
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.tomosia.chatapp.databinding.RcvMessageContentBinding
+import com.tomosia.chatapp.databinding.RcvHomeMessageBinding
 
 class ProfileAdapter : RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder>() {
 
 
-    class ProfileViewHolder(private val rcvMessageContentBinding: RcvMessageContentBinding) : RecyclerView.ViewHolder(rcvMessageContentBinding.root) {
+    class ProfileViewHolder(private val rcvMessageContentBinding: RcvHomeMessageBinding) : RecyclerView.ViewHolder(rcvMessageContentBinding.root) {
 
     }
 

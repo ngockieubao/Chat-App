@@ -11,25 +11,36 @@ import com.tomosia.chatapp.model.user.UserViewModel
 class ChatViewModel : ViewModel() {
     private val db = Firebase.firestore
 
-    private val userViewModel: UserViewModel = UserViewModel()
-
     private val _message = MutableLiveData<Message>()
     val message: LiveData<Message>
         get() = _message
 
-    fun addUserData() {
-        val user = hashMapOf(
-            "username" to "Ngoc",
-            "email" to "ngockieu@gmail.com"
+    fun addMessageData() {
+        val message = hashMapOf(
+            "titleMessage" to "Thanh Vu",
+            "contentMessage" to "Hi, guy",
+            "lastTimeMessage" to 12500
         )
 
-        db.collection("users")
-            .add(user)
+        db.collection("messages")
+            .add(message)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
-                Log.d(TAG, "addUserData: failed", e)
+                Log.d(TAG, "addMessageData: failed", e)
+            }
+    }
+
+    fun readMessageData() {
+        db.collection("messages").get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d(TAG, "${document.id} => ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG, "Error getting documents.", exception)
             }
     }
 

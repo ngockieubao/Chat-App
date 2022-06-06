@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.tomosia.chatapp.databinding.FragmentChatBinding
 import com.tomosia.chatapp.model.chat.ChatViewModel
@@ -23,18 +22,16 @@ class ChatFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentChatBinding.inflate(inflater, container, false)
 
-        chatViewModel.addMessageData()
-        chatViewModel.readMessageData()
-
-//        binding.fabChat.setOnClickListener {
-//            Toast.makeText(requireActivity(), "clicked", Toast.LENGTH_SHORT).show()
-//        }
-
+        chatViewModel.checkCurrentUser()
         val fab: View = binding.fabChat
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Here's a message", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
                 .show()
+
+            // no un-comment
+//            chatViewModel.addUserData()
+            chatViewModel.readUserData()
         }
 
         return binding.root

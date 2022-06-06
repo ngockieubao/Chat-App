@@ -17,7 +17,6 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
 
-
     private val loginRegistViewModel: LoginRegistViewModel by sharedViewModel()
 
     override fun onCreateView(

@@ -23,15 +23,6 @@ class LoginRegistViewModel() : ViewModel() {
     val login: LiveData<LoginRegist>
         get() = _login
 
-    fun checkCurrentUser() {
-        val user = Firebase.auth.currentUser
-        if (user != null) {
-            //
-        } else {
-            //
-        }
-    }
-
     fun createAccount(email: String, passwd: String) {
         // Start create user
         if (TextUtils.isValidEmail(email)) {

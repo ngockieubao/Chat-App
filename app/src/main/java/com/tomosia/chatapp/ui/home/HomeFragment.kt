@@ -1,25 +1,17 @@
 package com.tomosia.chatapp.ui.home
 
-import android.graphics.Color
-import android.graphics.ColorFilter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentHomeBinding
-import com.tomosia.chatapp.model.chat.ChatViewModel
-import com.tomosia.chatapp.model.login.LoginRegistViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-
-    private val loginRegistViewModel: LoginRegistViewModel by sharedViewModel()
-    private val chatViewModel: ChatViewModel by sharedViewModel()
 
     private lateinit var dialog: SignOutDialog
 
@@ -35,19 +27,9 @@ class HomeFragment : Fragment() {
             dialog.show(parentFragmentManager, "sign_out")
         }
 
-        binding.imgvContactsHome.setOnClickListener {
-            binding.imgvContactsHome.setColorFilter(Color.argb(100, 33, 150, 243))
-            binding.imgvMessageHome.setColorFilter(Color.WHITE)
-
-        }
-
-        binding.imgvMessageHome.setOnClickListener {
-            binding.imgvMessageHome.setColorFilter(Color.argb(100, 33, 150, 243))
-            binding.imgvContactsHome.setColorFilter(Color.WHITE)
-        }
-
-        chatViewModel.addMessageData()
-        chatViewModel.readMessageData()
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
+        binding.bottomNav.setupWithNavController(navController)
 
         return binding.root
     }

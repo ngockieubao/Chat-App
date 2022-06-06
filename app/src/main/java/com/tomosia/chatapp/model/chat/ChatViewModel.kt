@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.model.user.User
 
@@ -72,7 +73,23 @@ class ChatViewModel : ViewModel() {
     fun readUserData() {
         db.collection("user").document(checkCurrentUser()!!.uid).get()
             .addOnSuccessListener { result ->
-                Log.d(TAG, "readUserData: ${result.data}")
+                Log.d(TAG, "readUserData: ${result.data} <= ${result.toObject<User>()}")
+                val listResult = result.toObject<User>()
+                if (listResult != null) {
+                    Log.d(TAG, "readUserData: ${listResult.listConversation[0].id}")
+                    try {
+                        val listCon = listResult.listConversation[0].id
+                        db.collection("conversation").document(listCon).get()
+                            .addOnSuccessListener { result ->
+                                Log.d(TAG, "readUserData: ${result.data}")
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.d(TAG, "readUserData: ${exception.message}")
+                            }
+                    } catch (ex: IndexOutOfBoundsException) {
+                        Log.d(TAG, "readUserData: ${ex.message}")
+                    }
+                }
             }
             .addOnFailureListener {
                 Log.d(TAG, "readUserData: read data failed")

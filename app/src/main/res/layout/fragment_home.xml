@@ -47,11 +47,11 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/imgv_chat_home"
+                android:id="@+id/imgv_signout_home"
                 android:layout_width="29dp"
                 android:layout_height="33dp"
                 android:layout_weight="1"
-                android:src="@mipmap/ic_edit_64"
+                android:src="@mipmap/ic_exit_64"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toEndOf="@+id/tv_title_home"
@@ -65,13 +65,13 @@
             app:layout_constraintBottom_toTopOf="@+id/linear_footer_home"
             app:layout_constraintTop_toBottomOf="@+id/linear_header_home"
             tools:itemCount="5"
-            tools:listitem="@layout/rcv_message_content" />
+            tools:listitem="@layout/rcv_home_message" />
 
         <LinearLayout
             android:id="@+id/linear_footer_home"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="#B3B3B3"
+            android:background="#DDDCDC"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="10dp"
@@ -79,19 +79,19 @@
             app:layout_constraintBottom_toBottomOf="parent">
 
             <ImageView
-                android:id="@+id/imgv_contacts_home"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@mipmap/ic_people_64"
-                app:tint="@color/white" />
-
-            <ImageView
                 android:id="@+id/imgv_message_home"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:src="@mipmap/ic_message_64"
+                app:tint="#2196F3" />
+
+            <ImageView
+                android:id="@+id/imgv_contacts_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@mipmap/ic_people_64"
                 app:tint="@color/white" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

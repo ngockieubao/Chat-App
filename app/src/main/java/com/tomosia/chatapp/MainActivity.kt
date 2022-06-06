@@ -24,11 +24,11 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        val navController = this.findNavController(R.id.actNavHost)
-        if (!navController.popBackStack()) {
-            // Call finish() on your Activity
-            finish()
-        }
+//        val navController = this.findNavController(R.id.actNavHost)
+//        if (!navController.popBackStack()) {
+//            // Call finish() on your Activity
+//            finish()
+//        }
     }
 
     companion object {

@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentRegisterBinding
-import com.tomosia.chatapp.viewmodel.LoginRegistViewModel
+import com.tomosia.chatapp.model.login.LoginRegistViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class RegisterFragment : Fragment() {

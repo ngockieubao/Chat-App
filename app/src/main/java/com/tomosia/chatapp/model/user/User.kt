@@ -1,4 +1,4 @@
-package com.tomosia.chatapp.model
+package com.tomosia.chatapp.model.user
 
 data class User(
     val userID: Int,

@@ -9,10 +9,21 @@
         android:id="@+id/contactFragment"
         android:name="com.tomosia.chatapp.ui.home.ContactFragment"
         android:label="fragment_contact"
-        tools:layout="@layout/fragment_contact" />
+        tools:layout="@layout/fragment_contact">
+        <action
+            android:id="@+id/action_contactFragment_to_contactBottomSheetFragment"
+            app:destination="@id/contactBottomSheetFragment" />
+    </fragment>
     <fragment
         android:id="@+id/chatFragment"
         android:name="com.tomosia.chatapp.ui.home.ChatFragment"
         android:label="fragment_chat"
-        tools:layout="@layout/fragment_chat" />
+        tools:layout="@layout/fragment_chat">
+    </fragment>
+    <dialog
+        android:id="@+id/contactBottomSheetFragment"
+        android:name="com.tomosia.chatapp.ui.home.ContactBottomSheetFragment"
+        android:label="fragment_bottom_sheet"
+        tools:layout="@layout/fragment_bottom_sheet" />
+
 </navigation>

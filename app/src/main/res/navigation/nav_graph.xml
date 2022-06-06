@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/contactFragment"
-        android:name="com.tomosia.chatapp.ui.home.ContactFragment"
+        android:name="com.tomosia.chatapp.ui.home.contact.ContactFragment"
         android:label="fragment_contact"
         tools:layout="@layout/fragment_contact">
         <action
@@ -16,14 +16,21 @@
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
-        android:name="com.tomosia.chatapp.ui.home.ChatFragment"
+        android:name="com.tomosia.chatapp.ui.home.chat.ChatFragment"
         android:label="fragment_chat"
         tools:layout="@layout/fragment_chat">
+        <action
+            android:id="@+id/action_chatFragment_to_chatBottomSheetFragment"
+            app:destination="@id/chatBottomSheetFragment" />
     </fragment>
     <dialog
         android:id="@+id/contactBottomSheetFragment"
-        android:name="com.tomosia.chatapp.ui.home.ContactBottomSheetFragment"
+        android:name="com.tomosia.chatapp.ui.home.contact.ContactBottomSheetFragment"
         android:label="fragment_bottom_sheet"
-        tools:layout="@layout/fragment_bottom_sheet" />
-
+        tools:layout="@layout/fragment_contact_bottom_sheet" />
+    <dialog
+        android:id="@+id/chatBottomSheetFragment"
+        android:name="com.tomosia.chatapp.ui.home.chat.ChatBottomSheetFragment"
+        android:label="fragment_chat_bottom_sheet"
+        tools:layout="@layout/fragment_chat_bottom_sheet" />
 </navigation>

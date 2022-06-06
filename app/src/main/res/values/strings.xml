@@ -6,4 +6,7 @@
     <string name="string_contact">Contact</string>
     <string name="string_chat">Chat</string>
     <string name="string_submit">Submit</string>
+    <string name="string_done">Xong</string>
+    <string name="string_contact_title">Danh bạ</string>
+    <string name="string_cancel">Huỷ</string>
 </resources>

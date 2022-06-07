@@ -7,7 +7,8 @@ data class User(
     val email: String,
     val username: String,
     val photoUrl: String,
+    val listFriend: List<String>,
     val listConversation: List<DocumentReference>
 ) {
-    constructor() : this("", "", "", "", emptyList())
+    constructor() : this("", "", "", "", emptyList(), emptyList())
 }

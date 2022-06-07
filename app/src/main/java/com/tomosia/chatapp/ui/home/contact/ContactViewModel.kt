@@ -19,7 +19,7 @@ class ContactViewModel : ViewModel() {
     val users: LiveData<List<User>>
         get() = _users
 
-    val listUserToObject = mutableListOf<User>()
+    private val listUserToObject = mutableListOf<User>()
 
     private fun checkCurrentUser(): FirebaseUser? {
         val user = auth
@@ -33,29 +33,28 @@ class ContactViewModel : ViewModel() {
     }
 
     fun readListUser() {
-        listUserToObject.clear()
         db.collection("user").get()
             .addOnSuccessListener { result ->
+                listUserToObject.clear()
                 for (document in result) {
-//                    Log.d(TAG, "${document.id} => ${document.data}")
                     val userToObject = document.toObject<User>()
-//                    Log.d(TAG, "readListUser: ${userToObject}")
                     listUserToObject.add(userToObject)
-
-//                    val userObjectUserID = userToObject.userID
-//                    Log.d(TAG, "UserID: ${userObjectUserID}")
-//                    val userObjectUsername = userToObject.username
-//                    Log.d(TAG, "Username: ${userObjectUsername}")
-//                    val userObjectEmail = userToObject.email
-//                    Log.d(TAG, "Email: ${userObjectEmail}")
-//                    val userObjectPhotoUrl = userToObject.photoUrl
-//                    Log.d(TAG, "PhotoUrl: ${userObjectPhotoUrl}")
                 }
                 _users.value = listUserToObject
-//                Log.d(TAG, "readListUser: ${_users.value.toString()}")
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "readUser: Error getting documents", exception)
+            }
+    }
+
+    fun readListFriend() {
+        db.collection("user").get()
+            .addOnSuccessListener { result ->
+                // listFriendToObject
+                for (document in result) {
+                    val friendToObject = document.toObject<User>()
+
+                }
             }
     }
 
@@ -70,10 +69,10 @@ class ContactViewModel : ViewModel() {
                         val listCon = listResult.listConversation[0].id
                         db.collection("conversation").document(listCon).get()
                             .addOnSuccessListener { result ->
-                                Log.d(TAG, "readUserData: ${result.data}")
+                                Log.d(TAG, "readConversation: ${result.data}")
                             }
                             .addOnFailureListener { exception ->
-                                Log.d(TAG, "readUserData: ${exception.message}")
+                                Log.d(TAG, "readConversation: ${exception.message}")
                             }
                     } catch (ex: IndexOutOfBoundsException) {
                         Log.d(TAG, "readUserData: ${ex.message}")

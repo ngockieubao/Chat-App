@@ -27,8 +27,7 @@ class ChatFragment : Fragment() {
         fab.setOnClickListener { view ->
             findNavController().navigate(R.id.action_chatFragment_to_chatBottomSheetFragment)
             // no un-comment
-//            chatViewModel.addUserData()
-//            chatViewModel.readUserData()
+//            chatViewModel.readCurrentUser()
         }
 
         return binding.root

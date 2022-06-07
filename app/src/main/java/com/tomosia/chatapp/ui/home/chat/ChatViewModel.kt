@@ -11,6 +11,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.model.Message
 import com.tomosia.chatapp.model.User
+import com.tomosia.chatapp.ui.home.contact.ContactViewModel
 
 class ChatViewModel : ViewModel() {
     private val db = Firebase.firestore
@@ -49,6 +50,31 @@ class ChatViewModel : ViewModel() {
             }
     }
 
+//    fun readCurrentUser() {
+//        db.collection("user").document(checkCurrentUser()!!.uid).get()
+//            .addOnSuccessListener { result ->
+//                Log.d(TAG, "readUserData: ${result.data} <= ${result.toObject<com.tomosia.chatapp.model.User>()}")
+//                val listResult = result.toObject<com.tomosia.chatapp.model.User>()
+//                if (listResult != null) {
+//                    Log.d(TAG, "readUserData: ${listResult.listConversation[0].id}")
+//                    try {
+//                        val listCon = listResult.listConversation[0].id
+//                        db.collection("conversation").document(listCon).get()
+//                            .addOnSuccessListener { result ->
+//                                Log.d(TAG, "readUserData: ${result.data}")
+//                            }
+//                            .addOnFailureListener { exception ->
+//                                Log.d(TAG, "readUserData: ${exception.message}")
+//                            }
+//                    } catch (ex: IndexOutOfBoundsException) {
+//                        Log.d(TAG, "readUserData: ${ex.message}")
+//                    }
+//                }
+//            }
+//            .addOnFailureListener {
+//                Log.d(TAG, "readUserData: read data failed")
+//            }
+//    }
 
     fun checkCurrentUser(): FirebaseUser? {
         val user = auth
@@ -58,23 +84,6 @@ class ChatViewModel : ViewModel() {
         } else {
             // no user is signed in
             return null
-        }
-    }
-
-    // Get user's profile
-    private fun getUserProfile() {
-        val user = auth
-        user?.let {
-            // Username, email, photoUrl
-            val username = user.displayName
-            val email = user.email
-            val photoUrl = user.photoUrl
-
-            // Check if user's email is verified
-            val emailVerified = user.isEmailVerified
-
-            //
-            val uid = user.uid
         }
     }
 

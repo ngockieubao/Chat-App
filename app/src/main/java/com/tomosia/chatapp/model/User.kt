@@ -1,4 +1,4 @@
-package com.tomosia.chatapp.model.user
+package com.tomosia.chatapp.model
 
 import com.google.firebase.firestore.DocumentReference
 

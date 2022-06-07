@@ -8,7 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
-import com.tomosia.chatapp.model.login.LoginRegistViewModel
+import com.tomosia.chatapp.ui.login.LoginRegistViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import java.lang.IllegalStateException
 

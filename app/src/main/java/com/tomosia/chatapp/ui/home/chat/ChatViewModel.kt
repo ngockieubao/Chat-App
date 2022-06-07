@@ -1,4 +1,4 @@
-package com.tomosia.chatapp.model.chat
+package com.tomosia.chatapp.ui.home.chat
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -9,7 +9,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.tomosia.chatapp.model.user.User
+import com.tomosia.chatapp.model.Message
+import com.tomosia.chatapp.model.User
 
 class ChatViewModel : ViewModel() {
     private val db = Firebase.firestore

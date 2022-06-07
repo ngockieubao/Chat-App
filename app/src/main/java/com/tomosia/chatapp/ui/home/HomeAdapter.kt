@@ -3,7 +3,7 @@ package com.tomosia.chatapp.ui.home
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tomosia.chatapp.databinding.RcvHomeMessageBinding
-import com.tomosia.chatapp.model.chat.Message
+import com.tomosia.chatapp.model.Message
 
 class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeViewHolder>() {
 

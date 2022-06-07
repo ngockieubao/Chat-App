@@ -1,4 +1,4 @@
-package com.tomosia.chatapp.model.login
+package com.tomosia.chatapp.ui.login
 
 import android.util.Log
 import android.widget.Toast
@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.ChatApplication
+import com.tomosia.chatapp.model.LoginRegist
 import com.tomosia.chatapp.util.TextUtils
 
 class LoginRegistViewModel() : ViewModel() {

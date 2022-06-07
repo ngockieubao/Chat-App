@@ -15,6 +15,10 @@ class ChatBottomSheetFragment : BottomSheetDialogFragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentChatBottomSheetBinding.inflate(inflater, container, false)
+
+        binding.tvCancelChatBottomSheet.setOnClickListener {
+            this.dismiss()
+        }
         return binding.root
     }
 }

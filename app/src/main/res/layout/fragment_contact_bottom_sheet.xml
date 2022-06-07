@@ -26,7 +26,7 @@
                     android:id="@+id/tv_title_contact_bottom_sheet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/string_contact_title"
+                    android:text="@string/string_friend_title"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -64,10 +64,12 @@
                     app:queryHint="Tìm kiếm người liên hệ" />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcv_home_contact_bottom_sheet"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="10dp"
                     android:padding="8dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@+id/contact_search"
                     tools:layout_editor_absoluteX="10dp"
                     tools:listitem="@layout/rcv_home_contact" />

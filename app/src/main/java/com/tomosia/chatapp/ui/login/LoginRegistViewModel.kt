@@ -107,6 +107,7 @@ class LoginRegistViewModel() : ViewModel() {
             "email" to checkCurrentUser()!!.email,
             "username" to checkCurrentUser()!!.uid,
             "photoUrl" to "default",
+            "listFriend" to emptyList<String>(),
             "listConversation" to emptyList<DocumentReference>()
         )
         db.collection("user")

@@ -20,7 +20,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="10dp">
+                android:padding="15dp">
 
                 <TextView
                     android:id="@+id/tv_title_chat_bottom_sheet"
@@ -36,7 +36,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_done_chat_bottom_sheet"
+                    android:id="@+id/tv_cancel_chat_bottom_sheet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/string_cancel"
@@ -68,6 +68,7 @@
                     android:layout_marginTop="10dp"
                     android:padding="8dp"
                     app:layout_constraintTop_toBottomOf="@+id/chat_search"
+                    tools:itemCount="10"
                     tools:layout_editor_absoluteX="10dp"
                     tools:listitem="@layout/rcv_home_message" />
             </androidx.constraintlayout.widget.ConstraintLayout>

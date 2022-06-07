@@ -18,13 +18,13 @@
             <ImageView
                 android:id="@+id/imageView_home_message_avatar"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="55dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_robot" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:orientation="vertical"
@@ -38,6 +38,7 @@
                     android:layout_weight="1"
                     android:text="User"
                     android:textColor="@color/black"
+                    android:textSize="16sp"
                     tools:ignore="NestedWeights" />
 
                 <TextView
@@ -47,7 +48,8 @@
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
                     android:text="Content message"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -20,11 +20,6 @@ class ChatViewModel : ViewModel() {
     val message: LiveData<Message>
         get() = _message
 
-    private val _user = MutableLiveData<List<User>>()
-    val user: LiveData<List<User>>
-        get() = _user
-
-
     fun addMessageData() {
         val message = hashMapOf(
             "titleMessage" to "Thanh Vu",
@@ -54,48 +49,6 @@ class ChatViewModel : ViewModel() {
             }
     }
 
-    fun addUserData() {
-        val user = hashMapOf(
-            "userID" to checkCurrentUser()!!.uid,
-            "email" to checkCurrentUser()!!.email,
-            "username" to checkCurrentUser()!!.uid,
-            "photoUrl" to "default"
-        )
-        db.collection("user")
-            .document(checkCurrentUser()!!.uid).set(user)
-            .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: success")
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "addUserData: failed")
-            }
-    }
-
-    fun readUserData() {
-        db.collection("user").document(checkCurrentUser()!!.uid).get()
-            .addOnSuccessListener { result ->
-                Log.d(TAG, "readUserData: ${result.data} <= ${result.toObject<User>()}")
-                val listResult = result.toObject<User>()
-                if (listResult != null) {
-                    Log.d(TAG, "readUserData: ${listResult.listConversation[0].id}")
-                    try {
-                        val listCon = listResult.listConversation[0].id
-                        db.collection("conversation").document(listCon).get()
-                            .addOnSuccessListener { result ->
-                                Log.d(TAG, "readUserData: ${result.data}")
-                            }
-                            .addOnFailureListener { exception ->
-                                Log.d(TAG, "readUserData: ${exception.message}")
-                            }
-                    } catch (ex: IndexOutOfBoundsException) {
-                        Log.d(TAG, "readUserData: ${ex.message}")
-                    }
-                }
-            }
-            .addOnFailureListener {
-                Log.d(TAG, "readUserData: read data failed")
-            }
-    }
 
     fun checkCurrentUser(): FirebaseUser? {
         val user = auth

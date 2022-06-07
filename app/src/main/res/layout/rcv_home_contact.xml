@@ -3,28 +3,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.tomosia.chatapp.model.User" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="5dp"
+            android:padding="10dp"
             android:weightSum="6">
 
             <ImageView
                 android:id="@+id/imageView_home_contact_avatar"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="55dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
                 app:srcCompat="@drawable/ic_robot" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="5"
                 android:orientation="vertical"
@@ -36,9 +43,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="0dp"
                     android:layout_weight="1"
-                    android:text="Username"
+                    android:text="@{item.username}"
                     android:textColor="@color/black"
-                    tools:ignore="NestedWeights" />
+                    android:textSize="16sp"
+                    tools:ignore="NestedWeights"
+                    tools:text="Username" />
 
                 <TextView
                     android:id="@+id/tv_home_contact_email"
@@ -46,8 +55,10 @@
                     android:layout_height="0dp"
                     android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:text="username@gmail.com"
-                    android:textColor="@color/black" />
+                    android:text="@{item.email}"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:text="username@gmail.com" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

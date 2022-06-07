@@ -56,7 +56,6 @@ class RegisterFragment : Fragment() {
 
         binding.btnSignup.setOnClickListener {
             loginRegistViewModel.createAccount(email!!, passwd!!)
-            Log.d(TAG, "email: ${loginRegistViewModel.regist.value?.email} - passwd: ${loginRegistViewModel.regist.value?.passwd} ")
         }
 
         loginRegistViewModel.regist.observe(this.viewLifecycleOwner) {

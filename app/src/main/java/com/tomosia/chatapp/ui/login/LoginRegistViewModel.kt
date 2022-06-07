@@ -6,7 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.ChatApplication
 import com.tomosia.chatapp.model.LoginRegist
@@ -15,6 +18,7 @@ import com.tomosia.chatapp.util.TextUtils
 class LoginRegistViewModel() : ViewModel() {
     private val context = ChatApplication.instant
     private val auth: FirebaseAuth = Firebase.auth
+    private val db = Firebase.firestore
 
     private val _regist = MutableLiveData<LoginRegist>()
     val regist: LiveData<LoginRegist>
@@ -31,6 +35,7 @@ class LoginRegistViewModel() : ViewModel() {
                 .addOnSuccessListener {
                     val getRegist = LoginRegist(email, passwd)
                     _regist.value = getRegist
+                    addUserData()
                 }
                 .addOnCompleteListener() { task ->
                     if (task.isSuccessful) {
@@ -43,7 +48,11 @@ class LoginRegistViewModel() : ViewModel() {
                     }
                 }.addOnFailureListener() { task ->
                     Log.d(TAG, "${task.message}")
-                    Toast.makeText(context, "Register failed", Toast.LENGTH_SHORT).show()
+                    val emailExistsException = task.message
+                    if (task.message == emailExistsException)
+                        Toast.makeText(context, "The email address is already in use by another account.", Toast.LENGTH_SHORT).show()
+                    else
+                        Toast.makeText(context, "Register failed", Toast.LENGTH_SHORT).show()
                 }
         } else {
             Toast.makeText(context, "Invalid email format", Toast.LENGTH_SHORT).show()
@@ -75,8 +84,39 @@ class LoginRegistViewModel() : ViewModel() {
     }
 
     // Sign-out
-    fun signOut(){
+    fun signOut() {
         Firebase.auth.signOut()
+    }
+
+    // Check current user
+    fun checkCurrentUser(): FirebaseUser? {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            // user is signed in
+            return user
+        } else {
+            // no user is signed in
+            return null
+        }
+    }
+
+    // Add current user data to server
+    fun addUserData() {
+        val user = hashMapOf(
+            "userID" to checkCurrentUser()!!.uid,
+            "email" to checkCurrentUser()!!.email,
+            "username" to checkCurrentUser()!!.uid,
+            "photoUrl" to "default",
+            "listConversation" to emptyList<DocumentReference>()
+        )
+        db.collection("user")
+            .document(checkCurrentUser()!!.uid).set(user)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: success")
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "addUserData: failed")
+            }
     }
 
     companion object {

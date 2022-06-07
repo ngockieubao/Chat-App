@@ -28,7 +28,7 @@ class ChatFragment : Fragment() {
             findNavController().navigate(R.id.action_chatFragment_to_chatBottomSheetFragment)
             // no un-comment
 //            chatViewModel.addUserData()
-            chatViewModel.readUserData()
+//            chatViewModel.readUserData()
         }
 
         return binding.root

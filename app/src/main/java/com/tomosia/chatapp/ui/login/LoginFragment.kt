@@ -53,7 +53,6 @@ class LoginFragment : Fragment() {
         //
         binding.btnSignin.setOnClickListener {
             loginRegistViewModel.signIn(email!!, passwd!!)
-            Log.d(TAG, "email: ${loginRegistViewModel.regist.value?.email} - passwd: ${loginRegistViewModel.regist.value?.passwd} ")
         }
 
         loginRegistViewModel.login.observe(this.viewLifecycleOwner) {

@@ -5,11 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tomosia.chatapp.databinding.FragmentContactBottomSheetBinding
+import com.tomosia.chatapp.model.User
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class ContactBottomSheetFragment : BottomSheetDialogFragment() {
+class ContactBottomSheetFragment : BottomSheetDialogFragment(), AddFriendInterface {
     private lateinit var binding: FragmentContactBottomSheetBinding
     private val contactViewModel: ContactViewModel by sharedViewModel()
     private lateinit var addFriendAdapter: AddFriendAdapter
@@ -20,9 +23,10 @@ class ContactBottomSheetFragment : BottomSheetDialogFragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentContactBottomSheetBinding.inflate(inflater, container, false)
-
+        addFriendAdapter = AddFriendAdapter(this)
+        binding.rcvHomeContactBottomSheet.adapter = addFriendAdapter
         contactViewModel.readListUser()
-        addFriendAdapter = AddFriendAdapter()
+
         contactViewModel.users.observe(this.viewLifecycleOwner) {
             if (it != null) {
                 addFriendAdapter.listUser = it
@@ -30,12 +34,15 @@ class ContactBottomSheetFragment : BottomSheetDialogFragment() {
             }
         }
 
-        binding.rcvHomeContactBottomSheet.adapter = addFriendAdapter
-
         binding.tvDoneContactBottomSheet.setOnClickListener {
             this.dismiss()
         }
 
         return binding.root
+    }
+
+    override fun clickToAddFriend(user: User?) {
+//        val bundle = bundleOf("add_friend" to user)
+        Toast.makeText(requireActivity(), "Sent add friend", Toast.LENGTH_SHORT).show()
     }
 }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.tomosia.chatapp.model.User" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:weightSum="6">
+
+            <ImageView
+                android:id="@+id/imageView_home_contact_bottom_sheet_avatar"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/ic_robot" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/tv_home_contact_bottom_sheet_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@{item.username}"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:ignore="NestedWeights"
+                    tools:text="Username" />
+
+                <TextView
+                    android:id="@+id/tv_home_contact_bottom_sheet_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:text="@{item.email}"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    tools:text="username@gmail.com" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageView_add_friend"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="3dp"
+                android:layout_weight="1"
+                android:src="@mipmap/ic_add_user_64" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

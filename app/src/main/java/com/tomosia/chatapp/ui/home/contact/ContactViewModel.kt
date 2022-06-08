@@ -25,7 +25,7 @@ class ContactViewModel : ViewModel() {
     val friends: LiveData<List<User>>
         get() = _friends
 
-    private val listFriends = mutableListOf<User>()
+    private val listFriendShow = mutableListOf<User>()
 
     private fun checkCurrentUser(): FirebaseUser? {
         val user = auth
@@ -38,14 +38,20 @@ class ContactViewModel : ViewModel() {
         }
     }
 
+    private val userRef = db.collection("user")
     fun readListUser() {
-        db.collection("user").get()
+        userRef.get()
             .addOnSuccessListener { result ->
                 listUserToObject.clear()
                 for (document in result) {
                     val userToObject = document.toObject<User>()
-                    listUserToObject.add(userToObject)
+                    // Exclude current user from list user
+                    if (document.id != checkCurrentUser()!!.uid) {
+                        listUserToObject.add(userToObject)
+                    }
                 }
+                // Remove list friend from list user
+                _friends.value?.let { listUserToObject.removeAll(it) }
                 _users.value = listUserToObject
             }
             .addOnFailureListener { exception ->
@@ -54,11 +60,11 @@ class ContactViewModel : ViewModel() {
     }
 
     fun readListFriend() {
-        db.collection("user").document(checkCurrentUser()!!.uid).get()
+        userRef.document(checkCurrentUser()!!.uid).get()
             .addOnSuccessListener { result ->
                 val userToObject = result.toObject<User>()
                 val listFriendToObject = userToObject!!.listFriend
-                listFriends.clear()
+                listFriendShow.clear()
                 showListFriend(listFriendToObject)
             }
             .addOnFailureListener { exception ->
@@ -68,13 +74,13 @@ class ContactViewModel : ViewModel() {
 
     private fun showListFriend(listFriendToObject: List<String>) {
         for (i in 0..listFriendToObject.size.minus(1)) {
-            db.collection("user").document(listFriendToObject[i]).get()
+            userRef.document(listFriendToObject[i]).get()
                 .addOnSuccessListener { resultUser ->
                     val userDataToObject = resultUser.toObject<User>()
                     if (userDataToObject != null) {
-                        listFriends.add(userDataToObject)
+                        listFriendShow.add(userDataToObject)
                         if (i == listFriendToObject.size.minus(1)) {
-                            _friends.value = listFriends
+                            _friends.value = listFriendShow
                         }
                     }
                 }
@@ -85,7 +91,7 @@ class ContactViewModel : ViewModel() {
     }
 
     fun readCurrentUserConversation() {
-        db.collection("user").document(checkCurrentUser()!!.uid).get()
+        userRef.document(checkCurrentUser()!!.uid).get()
             .addOnSuccessListener { result ->
                 Log.d(TAG, "readUserData: ${result.data} <= ${result.toObject<com.tomosia.chatapp.model.User>()}")
                 val listResult = result.toObject<com.tomosia.chatapp.model.User>()

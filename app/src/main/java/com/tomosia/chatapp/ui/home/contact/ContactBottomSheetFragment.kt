@@ -12,7 +12,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class ContactBottomSheetFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentContactBottomSheetBinding
     private val contactViewModel: ContactViewModel by sharedViewModel()
-    private lateinit var contactAdapter: ContactAdapter
+    private lateinit var addFriendAdapter: AddFriendAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,15 +22,15 @@ class ContactBottomSheetFragment : BottomSheetDialogFragment() {
         binding = FragmentContactBottomSheetBinding.inflate(inflater, container, false)
 
         contactViewModel.readListUser()
-        contactAdapter = ContactAdapter()
+        addFriendAdapter = AddFriendAdapter()
         contactViewModel.users.observe(this.viewLifecycleOwner) {
             if (it != null) {
-                contactAdapter.listUser = it
-                Log.d("ContactFragment", "onCreateView: ${it}")
+                addFriendAdapter.listUser = it
+                Log.d("ContactBottomSheet", "onCreateView: $it")
             }
         }
 
-        binding.rcvHomeContactBottomSheet.adapter = contactAdapter
+        binding.rcvHomeContactBottomSheet.adapter = addFriendAdapter
 
         binding.tvDoneContactBottomSheet.setOnClickListener {
             this.dismiss()

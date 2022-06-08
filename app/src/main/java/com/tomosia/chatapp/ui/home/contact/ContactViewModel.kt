@@ -21,6 +21,12 @@ class ContactViewModel : ViewModel() {
 
     private val listUserToObject = mutableListOf<User>()
 
+    private val _friends = MutableLiveData<List<User>>()
+    val friends: LiveData<List<User>>
+        get() = _friends
+
+    private val listFriends = mutableListOf<User>()
+
     private fun checkCurrentUser(): FirebaseUser? {
         val user = auth
         if (user != null) {
@@ -48,17 +54,37 @@ class ContactViewModel : ViewModel() {
     }
 
     fun readListFriend() {
-        db.collection("user").get()
+        db.collection("user").document(checkCurrentUser()!!.uid).get()
             .addOnSuccessListener { result ->
-                // listFriendToObject
-                for (document in result) {
-                    val friendToObject = document.toObject<User>()
-
-                }
+                val userToObject = result.toObject<User>()
+                val listFriendToObject = userToObject!!.listFriend
+                listFriends.clear()
+                showListFriend(listFriendToObject)
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "readListFriend fail: ${exception.message}")
             }
     }
 
-    fun readCurrentUser() {
+    private fun showListFriend(listFriendToObject: List<String>) {
+        for (i in 0..listFriendToObject.size.minus(1)) {
+            db.collection("user").document(listFriendToObject[i]).get()
+                .addOnSuccessListener { resultUser ->
+                    val userDataToObject = resultUser.toObject<User>()
+                    if (userDataToObject != null) {
+                        listFriends.add(userDataToObject)
+                        if (i == listFriendToObject.size.minus(1)) {
+                            _friends.value = listFriends
+                        }
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "get user in list friend fail: ${exception.message}")
+                }
+        }
+    }
+
+    fun readCurrentUserConversation() {
         db.collection("user").document(checkCurrentUser()!!.uid).get()
             .addOnSuccessListener { result ->
                 Log.d(TAG, "readUserData: ${result.data} <= ${result.toObject<com.tomosia.chatapp.model.User>()}")

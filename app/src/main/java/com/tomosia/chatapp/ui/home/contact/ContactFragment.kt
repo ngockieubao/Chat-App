@@ -14,7 +14,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class ContactFragment : Fragment() {
     private lateinit var binding: FragmentContactBinding
     private val contactViewModel: ContactViewModel by sharedViewModel()
-    private lateinit var friendAdapter: FriendAdapter
+    private lateinit var contactAdapter: ContactAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,13 +24,13 @@ class ContactFragment : Fragment() {
         binding = FragmentContactBinding.inflate(inflater, container, false)
 
         contactViewModel.readListFriend()
-        friendAdapter = FriendAdapter()
+        contactAdapter = ContactAdapter()
         contactViewModel.friends.observe(this.viewLifecycleOwner) {
-            friendAdapter.listFriend = it
+            contactAdapter.listFriend = it
             Log.d("ContactFragment", "onCreateView: $it")
         }
 
-        binding.rcvHomeContact.adapter = friendAdapter
+        binding.rcvHomeContact.adapter = contactAdapter
 
         val fab: View = binding.fabContact
         fab.setOnClickListener { view ->

@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -18,14 +19,15 @@ class ContactViewModel : ViewModel() {
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>>
         get() = _users
-
     private val listUserToObject = mutableListOf<User>()
 
     private val _friends = MutableLiveData<List<User>>()
     val friends: LiveData<List<User>>
         get() = _friends
-
     private val listFriendShow = mutableListOf<User>()
+    private var listFriendRemoved = mutableListOf<User>()
+
+    private val userRef = db.collection("user")
 
     private fun checkCurrentUser(): FirebaseUser? {
         val user = auth
@@ -38,7 +40,6 @@ class ContactViewModel : ViewModel() {
         }
     }
 
-    private val userRef = db.collection("user")
     fun readListUser() {
         userRef.get()
             .addOnSuccessListener { result ->
@@ -51,8 +52,11 @@ class ContactViewModel : ViewModel() {
                     }
                 }
                 // Remove list friend from list user
-                _friends.value?.let { listUserToObject.removeAll(it) }
-                _users.value = listUserToObject
+                _friends.value?.let {
+                    listUserToObject.removeAll(it)
+                    listFriendRemoved = listUserToObject
+                }
+                _users.value = listFriendRemoved
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "readUser: Error getting documents", exception)
@@ -90,30 +94,12 @@ class ContactViewModel : ViewModel() {
         }
     }
 
-    fun readCurrentUserConversation() {
-        userRef.document(checkCurrentUser()!!.uid).get()
-            .addOnSuccessListener { result ->
-                Log.d(TAG, "readUserData: ${result.data} <= ${result.toObject<com.tomosia.chatapp.model.User>()}")
-                val listResult = result.toObject<com.tomosia.chatapp.model.User>()
-                if (listResult != null) {
-                    Log.d(TAG, "readUserData: ${listResult.listConversation[0].id}")
-                    try {
-                        val listCon = listResult.listConversation[0].id
-                        db.collection("conversation").document(listCon).get()
-                            .addOnSuccessListener { result ->
-                                Log.d(TAG, "readConversation: ${result.data}")
-                            }
-                            .addOnFailureListener { exception ->
-                                Log.d(TAG, "readConversation: ${exception.message}")
-                            }
-                    } catch (ex: IndexOutOfBoundsException) {
-                        Log.d(TAG, "readUserData: ${ex.message}")
-                    }
-                }
-            }
-            .addOnFailureListener {
-                Log.d(TAG, "readUserData: read data failed")
-            }
+    // add friend to lisFriend
+    fun addFriend(user: User?) {
+        val curUserID = checkCurrentUser()!!.uid
+        // update listFriend of current user
+        userRef.document(curUserID).update("listFriend", FieldValue.arrayUnion(user!!.userID))
+        readListUser()
     }
 
     companion object {

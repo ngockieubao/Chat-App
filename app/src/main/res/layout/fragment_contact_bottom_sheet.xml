@@ -72,7 +72,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toBottomOf="@+id/contact_search"
                     tools:layout_editor_absoluteX="10dp"
-                    tools:listitem="@layout/rcv_home_contact" />
+                    tools:listitem="@layout/rcv_home_contact_bottom_sheet" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

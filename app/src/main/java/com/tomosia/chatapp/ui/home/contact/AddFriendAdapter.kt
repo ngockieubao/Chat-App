@@ -8,17 +8,17 @@ import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.RcvHomeContactBinding
 import com.tomosia.chatapp.model.User
 
-class FriendAdapter : RecyclerView.Adapter<FriendAdapter.FriendViewHolder>() {
+class AddFriendAdapter : RecyclerView.Adapter<AddFriendAdapter.AddFriendViewHolder>() {
 
-    var listFriend = listOf<User>()
+    var listUser = listOf<User>()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    class FriendViewHolder(private val rcvHomeContactBinding: RcvHomeContactBinding) : RecyclerView.ViewHolder
-        (rcvHomeContactBinding.root) {
+    class AddFriendViewHolder(private val rcvHomeContactBinding: RcvHomeContactBinding) :
+        RecyclerView.ViewHolder(rcvHomeContactBinding.root) {
 
         fun bind(item: User?) {
             if (item == null) return
@@ -32,19 +32,19 @@ class FriendAdapter : RecyclerView.Adapter<FriendAdapter.FriendViewHolder>() {
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendViewHolder {
-        return FriendViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AddFriendViewHolder {
+        return AddFriendViewHolder(
             RcvHomeContactBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             )
         )
     }
 
-    override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {
-        holder.bind(listFriend[position])
+    override fun onBindViewHolder(holder: AddFriendViewHolder, position: Int) {
+        holder.bind(listUser[position])
     }
 
     override fun getItemCount(): Int {
-        return listFriend.size
+        return listUser.size
     }
 }

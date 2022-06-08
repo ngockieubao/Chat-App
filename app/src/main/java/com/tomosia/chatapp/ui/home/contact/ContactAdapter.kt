@@ -10,15 +10,15 @@ import com.tomosia.chatapp.model.User
 
 class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
-    var listUser = listOf<User>()
+    var listFriend = listOf<User>()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    class ContactViewHolder(private val rcvHomeContactBinding: RcvHomeContactBinding) :
-        RecyclerView.ViewHolder(rcvHomeContactBinding.root) {
+    class ContactViewHolder(private val rcvHomeContactBinding: RcvHomeContactBinding) : RecyclerView.ViewHolder
+        (rcvHomeContactBinding.root) {
 
         fun bind(item: User?) {
             if (item == null) return
@@ -41,10 +41,10 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
     }
 
     override fun onBindViewHolder(holder: ContactViewHolder, position: Int) {
-        holder.bind(listUser[position])
+        holder.bind(listFriend[position])
     }
 
     override fun getItemCount(): Int {
-        return listUser.size
+        return listFriend.size
     }
 }

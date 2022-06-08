@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.RcvHomeContactBinding
 import com.tomosia.chatapp.model.User
 
@@ -22,6 +23,12 @@ class FriendAdapter : RecyclerView.Adapter<FriendAdapter.FriendViewHolder>() {
         fun bind(item: User?) {
             if (item == null) return
             rcvHomeContactBinding.item = item
+            rcvHomeContactBinding.imageViewHomeContactAvatar.setImageResource(
+                when (item.photoUrl) {
+                    "default" -> R.drawable.ic_robot
+                    else -> R.drawable.ic_robot
+                }
+            )
         }
     }
 
@@ -34,7 +41,7 @@ class FriendAdapter : RecyclerView.Adapter<FriendAdapter.FriendViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: FriendViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        holder.bind(listFriend[position])
     }
 
     override fun getItemCount(): Int {

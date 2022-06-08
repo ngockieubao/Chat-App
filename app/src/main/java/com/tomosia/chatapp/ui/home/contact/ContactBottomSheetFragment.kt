@@ -26,7 +26,7 @@ class ContactBottomSheetFragment : BottomSheetDialogFragment() {
         contactViewModel.users.observe(this.viewLifecycleOwner) {
             if (it != null) {
                 contactAdapter.listUser = it
-                Log.d("ContactFragment", "onCreateView: ${it}")
+                Log.d("ContactBottomSheet", "onCreateView: $it")
             }
         }
 

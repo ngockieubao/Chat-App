@@ -1,13 +1,10 @@
 package com.tomosia.chatapp.ui.home.contact
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.tomosia.chatapp.ChatApplication
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.RcvHomeContactBottomSheetBinding
 import com.tomosia.chatapp.model.User

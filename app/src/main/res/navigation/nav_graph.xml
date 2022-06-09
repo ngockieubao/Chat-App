@@ -32,5 +32,18 @@
         android:id="@+id/chatBottomSheetFragment"
         android:name="com.tomosia.chatapp.ui.home.chat.ChatBottomSheetFragment"
         android:label="fragment_chat_bottom_sheet"
-        tools:layout="@layout/fragment_chat_bottom_sheet" />
+        tools:layout="@layout/fragment_chat_bottom_sheet" >
+        <action
+            android:id="@+id/action_chatBottomSheetFragment_to_messageFragment"
+            app:destination="@id/messageFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/messageFragment"
+        android:name="com.tomosia.chatapp.ui.home.chat.MessageFragment"
+        android:label="fragment_message"
+        tools:layout="@layout/fragment_message" >
+        <action
+            android:id="@+id/action_messageFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
 </navigation>

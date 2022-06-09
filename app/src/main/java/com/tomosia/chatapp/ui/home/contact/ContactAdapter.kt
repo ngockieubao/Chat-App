@@ -1,14 +1,16 @@
 package com.tomosia.chatapp.ui.home.contact
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.RcvHomeContactBinding
 import com.tomosia.chatapp.model.User
+import com.tomosia.chatapp.ui.home.chat.ChatInterface
 
-class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
+class ContactAdapter(val chatInterface: ChatInterface) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     var listFriend = listOf<User>()
         @SuppressLint("NotifyDataSetChanged")
@@ -17,7 +19,7 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
             notifyDataSetChanged()
         }
 
-    class ContactViewHolder(private val rcvHomeContactBinding: RcvHomeContactBinding) : RecyclerView.ViewHolder
+    inner class ContactViewHolder(private val rcvHomeContactBinding: RcvHomeContactBinding) : RecyclerView.ViewHolder
         (rcvHomeContactBinding.root) {
 
         fun bind(item: User?) {
@@ -29,6 +31,10 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
                     else -> R.drawable.ic_robot
                 }
             )
+            rcvHomeContactBinding.lnUserInformation.setOnClickListener {
+                chatInterface.createMessage()
+                Log.d(TAG, "create message")
+            }
         }
     }
 
@@ -46,5 +52,9 @@ class ContactAdapter : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() 
 
     override fun getItemCount(): Int {
         return listFriend.size
+    }
+
+    companion object {
+        private const val TAG = "ContactAdapter"
     }
 }

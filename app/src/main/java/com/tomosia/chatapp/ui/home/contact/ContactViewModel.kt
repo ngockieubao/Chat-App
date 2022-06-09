@@ -53,8 +53,8 @@ class ContactViewModel : ViewModel() {
                 }
                 // Remove list friend from list user
                 _friends.value?.let {
-                    listUserToObject.removeAll(it)
                     listFriendRemoved = listUserToObject
+                    listFriendRemoved.removeAll(it)
                 }
                 _users.value = listFriendRemoved
             }

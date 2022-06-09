@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentChatBinding
@@ -26,10 +27,10 @@ class ChatFragment : Fragment() {
         val fab: View = binding.fabChat
         fab.setOnClickListener { view ->
             findNavController().navigate(R.id.action_chatFragment_to_chatBottomSheetFragment)
-            // no un-comment
-//            chatViewModel.readCurrentUser()
         }
 
         return binding.root
     }
+
+
 }

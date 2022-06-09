@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentContactBinding
+import com.tomosia.chatapp.ui.home.chat.ChatInterface
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class ContactFragment : Fragment() {
+class ContactFragment : Fragment(), ChatInterface {
     private lateinit var binding: FragmentContactBinding
     private val contactViewModel: ContactViewModel by sharedViewModel()
     private lateinit var contactAdapter: ContactAdapter
@@ -23,7 +24,7 @@ class ContactFragment : Fragment() {
         binding = FragmentContactBinding.inflate(inflater, container, false)
 
         contactViewModel.readListFriend()
-        contactAdapter = ContactAdapter()
+        contactAdapter = ContactAdapter(this)
         contactViewModel.friends.observe(this.viewLifecycleOwner) {
             contactAdapter.listFriend = it
         }
@@ -36,5 +37,8 @@ class ContactFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun createMessage() {
     }
 }

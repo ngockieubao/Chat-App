@@ -22,19 +22,32 @@ class HomeFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        dialog = SignOutDialog()
-        binding.imgvSignoutHome.setOnClickListener {
-            dialog.show(parentFragmentManager, "sign_out")
-        }
 
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
         binding.bottomNav.setupWithNavController(navController)
 
+        // Dialog log out
+        dialog = SignOutDialog()
+        binding.imgvSignoutHome.setOnClickListener {
+            dialog.show(parentFragmentManager, "sign_out")
+        }
+
+        // Hide header & bottom navigation when navigate to conversation
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            if (destination.id == R.id.messageFragment) {
+                binding.linearHeaderHome.visibility = View.GONE
+                binding.bottomNav.visibility = View.GONE
+            } else {
+                binding.linearHeaderHome.visibility = View.VISIBLE
+                binding.bottomNav.visibility = View.VISIBLE
+            }
+        }
+
         return binding.root
     }
 
     companion object {
-        private const val TAG = "home"
+        private const val TAG = "HomeFragment"
     }
 }

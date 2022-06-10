@@ -12,4 +12,10 @@ object Constants {
                 "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
                 ")+"
     )
+
+    fun getUsernameFromEmail(email: String?): String?{
+        if(email == null) return null
+        val s = email.split("@")
+        return s[0].trim()
+    }
 }

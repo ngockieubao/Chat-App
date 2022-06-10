@@ -52,12 +52,12 @@ class LoginFragment : Fragment() {
 
         //
         binding.btnSignin.setOnClickListener {
-            loginRegistViewModel.signIn(email!!, passwd!!)
+            loginRegistViewModel.signIn(email, passwd)
         }
 
         loginRegistViewModel.login.observe(this.viewLifecycleOwner) {
-            if (it != null)
-                Log.d(TAG, "$it")
+            if (it == null) return@observe
+            Log.d(TAG, "$it")
             navToHome()
         }
 

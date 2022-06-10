@@ -45,7 +45,7 @@ class ChatBottomSheetFragment : BottomSheetDialogFragment(), ChatInterface {
     override fun clickToCreateMessage(user: User) {
         val bundle = bundleOf("userChoose" to user)
         findNavController().navigate(R.id.action_chatBottomSheetFragment_to_messageFragment, bundle)
-        chatViewModel.createMessage()
+        chatViewModel.createMessage(user)
         Toast.makeText(requireActivity(), "Clicked to create message", Toast.LENGTH_SHORT).show()
     }
 }

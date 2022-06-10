@@ -8,8 +8,12 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
+import com.tomosia.chatapp.model.Conversation
 import com.tomosia.chatapp.model.Message
+import com.tomosia.chatapp.model.User
 
 class ChatViewModel : ViewModel() {
     private val db = Firebase.firestore
@@ -20,20 +24,38 @@ class ChatViewModel : ViewModel() {
         get() = _message
 
     private val conversationRef = db.collection("conversation")
-    fun createMessage() {
+    private val userRef = db.collection("user")
+    private val createListConversationID = mutableListOf<String>()
+    fun createMessage(user: User) {
         val users = hashMapOf(
-            "listUser" to listOf("4h7cVWY6g1dsjVHn3ZQrfxiE22C2", "ZYQhxffdKUW1MRhiK7W5uEm05Al1"),
-            "nameConversation" to ""
+            "listUser" to listOf(user.userID, checkCurrentUser()?.uid),
+            "nameConversation" to user.userID
         )
 
         val message = hashMapOf(
             "idSend" to checkCurrentUser()!!.uid,
             "lastTime" to Timestamp.now(),
-            "titleMessage" to "Thanh Vu",
             "message" to "Hi, there"
         )
 
         // Check conversation
+        userRef.document(checkCurrentUser()?.uid.toString()).get()
+            .addOnSuccessListener { result ->
+                val userData = result.toObject<User>()
+                val listConversation = userData?.listConversation
+                if (listConversation != null) {
+                    for (i in 0..listConversation.size) {
+                        val listConversationID = listConversation[i].id
+                        createListConversationID.add(listConversationID)
+                    }
+                }
+            }
+            .addOnFailureListener { ex ->
+                Log.d(TAG, "createMessage - get data fail: ${ex.message}")
+            }
+    }
+
+    private fun addUser(users: HashMap<String, Any?>, message: Cloneable) {
         conversationRef.add(users)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
@@ -45,46 +67,7 @@ class ChatViewModel : ViewModel() {
     }
 
     fun updateMessage() {
-        conversationRef.document("fUgmLbvjmg3tvQMtDIKz")
     }
-
-    fun readMessageData() {
-        db.collection("messages").get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w(TAG, "Error getting documents.", exception)
-            }
-    }
-
-//    fun readCurrentUser() {
-//        db.collection("user").document(checkCurrentUser()!!.uid).get()
-//            .addOnSuccessListener { result ->
-//                Log.d(TAG, "readUserData: ${result.data} <= ${result.toObject<com.tomosia.chatapp.model.User>()}")
-//                val listResult = result.toObject<com.tomosia.chatapp.model.User>()
-//                if (listResult != null) {
-//                    Log.d(TAG, "readUserData: ${listResult.listConversation[0].id}")
-//                    try {
-//                        val listCon = listResult.listConversation[0].id
-//                        db.collection("conversation").document(listCon).get()
-//                            .addOnSuccessListener { result ->
-//                                Log.d(TAG, "readUserData: ${result.data}")
-//                            }
-//                            .addOnFailureListener { exception ->
-//                                Log.d(TAG, "readUserData: ${exception.message}")
-//                            }
-//                    } catch (ex: IndexOutOfBoundsException) {
-//                        Log.d(TAG, "readUserData: ${ex.message}")
-//                    }
-//                }
-//            }
-//            .addOnFailureListener {
-//                Log.d(TAG, "readUserData: read data failed")
-//            }
-//    }
 
     fun checkCurrentUser(): FirebaseUser? {
         val user = auth

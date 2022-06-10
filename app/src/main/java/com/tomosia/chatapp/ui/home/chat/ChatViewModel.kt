@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -21,11 +22,11 @@ class ChatViewModel : ViewModel() {
     val message: LiveData<Message>
         get() = _message
 
-    fun addMessageData() {
+    fun createMessage() {
         val message = hashMapOf(
             "titleMessage" to "Thanh Vu",
             "contentMessage" to "Hi, guy",
-            "lastTimeMessage" to 12500
+            "lastTimeMessage" to Timestamp.now()
         )
 
         db.collection("messages")
@@ -37,6 +38,8 @@ class ChatViewModel : ViewModel() {
                 Log.d(TAG, "addMessageData: failed", e)
             }
     }
+
+    fun updateMessage() {}
 
     fun readMessageData() {
         db.collection("messages").get()

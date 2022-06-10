@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentContactBinding
+import com.tomosia.chatapp.model.User
 import com.tomosia.chatapp.ui.home.chat.ChatInterface
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
@@ -39,6 +40,6 @@ class ContactFragment : Fragment(), ChatInterface {
         return binding.root
     }
 
-    override fun createMessage() {
+    override fun createMessage(user: User?) {
     }
 }

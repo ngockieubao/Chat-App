@@ -1,5 +1,7 @@
 package com.tomosia.chatapp.ui.home.chat
 
+import com.tomosia.chatapp.model.User
+
 interface ChatInterface {
-    fun createMessage()
+    fun clickToCreateMessage(user: User?)
 }

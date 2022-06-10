@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.home.chat.MessageFragment">
 
+    <data>
+
+        <variable
+            name="item"
+            type="com.tomosia.chatapp.model.User" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_message_created"
         android:layout_width="match_parent"
@@ -19,7 +26,7 @@
             <ImageView
                 android:id="@+id/imageView_message_back"
                 android:layout_width="33dp"
-                android:layout_height="33dp"
+                android:layout_height="35dp"
                 android:layout_marginVertical="10dp"
                 android:layout_marginStart="10dp"
                 android:src="@mipmap/ic_left_48"
@@ -36,9 +43,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="Ori"
+                android:text="@{item.username}"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="Tommy" />
         </LinearLayout>
 
         <!-- TODO: Update blank fragment layout -->

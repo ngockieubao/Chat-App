@@ -32,7 +32,7 @@ class ContactAdapter(val chatInterface: ChatInterface) : RecyclerView.Adapter<Co
                 }
             )
             rcvHomeContactBinding.lnUserInformation.setOnClickListener {
-                chatInterface.createMessage()
+                chatInterface.clickToCreateMessage(item)
                 Log.d(TAG, "create message")
             }
         }

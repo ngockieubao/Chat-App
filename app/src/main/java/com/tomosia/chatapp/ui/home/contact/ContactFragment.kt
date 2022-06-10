@@ -40,6 +40,6 @@ class ContactFragment : Fragment(), ChatInterface {
         return binding.root
     }
 
-    override fun createMessage(user: User?) {
+    override fun clickToCreateMessage(user: User) {
     }
 }

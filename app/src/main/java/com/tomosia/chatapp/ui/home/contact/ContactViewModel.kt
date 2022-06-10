@@ -69,7 +69,9 @@ class ContactViewModel : ViewModel() {
                 val userToObject = result.toObject<User>()
                 val listFriendToObject = userToObject!!.listFriend
                 listFriendShow.clear()
-                showListFriend(listFriendToObject)
+                if (listFriendToObject != null) {
+                    showListFriend(listFriendToObject)
+                }
             }
             .addOnFailureListener { exception ->
                 Log.d(TAG, "readListFriend fail: ${exception.message}")

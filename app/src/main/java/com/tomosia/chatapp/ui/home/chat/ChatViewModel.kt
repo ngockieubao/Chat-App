@@ -8,11 +8,8 @@ import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.model.Message
-import com.tomosia.chatapp.model.User
-import com.tomosia.chatapp.ui.home.contact.ContactViewModel
 
 class ChatViewModel : ViewModel() {
     private val db = Firebase.firestore
@@ -22,24 +19,34 @@ class ChatViewModel : ViewModel() {
     val message: LiveData<Message>
         get() = _message
 
+    private val conversationRef = db.collection("conversation")
     fun createMessage() {
-        val message = hashMapOf(
-            "titleMessage" to "Thanh Vu",
-            "contentMessage" to "Hi, guy",
-            "lastTimeMessage" to Timestamp.now()
+        val users = hashMapOf(
+            "listUser" to listOf("4h7cVWY6g1dsjVHn3ZQrfxiE22C2", "ZYQhxffdKUW1MRhiK7W5uEm05Al1"),
+            "nameConversation" to ""
         )
 
-        db.collection("messages")
-            .add(message)
+        val message = hashMapOf(
+            "idSend" to checkCurrentUser()!!.uid,
+            "lastTime" to Timestamp.now(),
+            "titleMessage" to "Thanh Vu",
+            "message" to "Hi, there"
+        )
+
+        // Check conversation
+        conversationRef.add(users)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                conversationRef.document(documentReference.id).collection("message").add(message)
             }
             .addOnFailureListener { e ->
                 Log.d(TAG, "addMessageData: failed", e)
             }
     }
 
-    fun updateMessage() {}
+    fun updateMessage() {
+        conversationRef.document("fUgmLbvjmg3tvQMtDIKz")
+    }
 
     fun readMessageData() {
         db.collection("messages").get()

@@ -33,23 +33,25 @@
                 app:tint="#2196F3" />
 
             <ImageView
+                android:id="@+id/imageView_chat_avatar"
                 android:layout_width="40dp"
                 android:layout_height="35dp"
                 android:layout_marginVertical="10dp"
                 android:src="@mipmap/ic_robot_64" />
 
             <TextView
+                android:id="@+id/tv_chat_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
-                android:text="@{item.username}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 tools:text="Tommy" />
         </LinearLayout>
 
         <!-- TODO: Update blank fragment layout -->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_message_created"
             android:layout_width="match_parent"
@@ -57,9 +59,12 @@
             android:padding="10dp"
             android:text="@string/hello_blank_fragment"
             app:layout_constraintBottom_toTopOf="@+id/ln_message_created_footer"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ln_message_created_header"
+            app:layout_constraintVertical_bias="0.0"
             tools:itemCount="10"
-            tools:listitem="@layout/rcv_home_message" />
+            tools:listitem="@layout/chat_other_user" />
 
         <LinearLayout
             android:id="@+id/ln_message_created_footer"

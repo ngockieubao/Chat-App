@@ -47,13 +47,13 @@ class ContactViewModel : ViewModel() {
                 for (document in result) {
                     val userToObject = document.toObject<User>()
                     // Exclude current user from list user
-                    if (document.id != checkCurrentUser()!!.uid) {
+                    if (document.id != checkCurrentUser()?.uid) {
                         listUserToObject.add(userToObject)
                     }
                 }
+                listFriendRemoved = listUserToObject
                 // Remove list friend from list user
                 _friends.value?.let {
-                    listFriendRemoved = listUserToObject
                     listFriendRemoved.removeAll(it)
                 }
                 _users.value = listFriendRemoved
@@ -64,18 +64,20 @@ class ContactViewModel : ViewModel() {
     }
 
     fun readListFriend() {
-        userRef.document(checkCurrentUser()!!.uid).get()
-            .addOnSuccessListener { result ->
-                val userToObject = result.toObject<User>()
-                val listFriendToObject = userToObject!!.listFriend
-                listFriendShow.clear()
-                if (listFriendToObject != null) {
-                    showListFriend(listFriendToObject)
+        checkCurrentUser()?.uid?.let {
+            userRef.document(it).get()
+                .addOnSuccessListener { result ->
+                    val userToObject = result.toObject<User>()
+                    val listFriendToObject = userToObject!!.listFriend
+                    listFriendShow.clear()
+                    if (listFriendToObject != null) {
+                        showListFriend(listFriendToObject)
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "readListFriend fail: ${exception.message}")
-            }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "readListFriend fail: ${exception.message}")
+                }
+        }
     }
 
     private fun showListFriend(listFriendToObject: List<String>) {
@@ -98,10 +100,11 @@ class ContactViewModel : ViewModel() {
 
     // add friend to lisFriend
     fun addFriend(user: User?) {
-        val curUserID = checkCurrentUser()!!.uid
+        val curUserID = checkCurrentUser()?.uid
         // update listFriend of current user
-        userRef.document(curUserID).update("listFriend", FieldValue.arrayUnion(user!!.userID))
-        readListUser()
+        if (curUserID != null) {
+            userRef.document(curUserID).update("listFriend", FieldValue.arrayUnion(user?.userID))
+        }
     }
 
     companion object {

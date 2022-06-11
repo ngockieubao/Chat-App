@@ -26,9 +26,8 @@ class LoginRegistViewModel() : ViewModel() {
     val regist: LiveData<LoginRegist>
         get() = _regist
 
-    //fix lỗi chưa đăng nhập đã nhảy vào home
     private val _login = MutableLiveData<LoginRegist?>()
-    val login: LiveData<LoginRegist?>
+    val login: LiveData<LoginRegist?> // fix lỗi lưu trạng thái của phiên đăng nhập trước
         get() = _login
 
     fun createAccount(email: String, passwd: String) {
@@ -45,9 +44,6 @@ class LoginRegistViewModel() : ViewModel() {
                         // Sign-in success, update UI with user's info signed-in success
                         Log.d(TAG, "createAccount: success")
                         Toast.makeText(context, "Register success", Toast.LENGTH_SHORT).show()
-                        // Update UI with user's info signed-in success
-//                    val user = auth.currentUser
-//                    updateUI(user)
                     }
                 }.addOnFailureListener() { task ->
                     Log.d(TAG, "${task.message}")
@@ -70,7 +66,7 @@ class LoginRegistViewModel() : ViewModel() {
     fun signIn(email: String?, passwd: String?) {
         if (!TextUtils.checkNull(email, passwd)) {
             if (TextUtils.isValidEmail(email)) {
-                if (TextUtils.checkPassword(passwd)){
+                if (TextUtils.checkPassword(passwd)) {
                     auth.signInWithEmailAndPassword(email!!, passwd!!)
                         .addOnSuccessListener {
                             // Check user email
@@ -92,43 +88,50 @@ class LoginRegistViewModel() : ViewModel() {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-            } else Toast.makeText(context, "Password has length more 6 character", Toast.LENGTH_SHORT).show()
-        } else Toast.makeText(context, "Invalid email format", Toast.LENGTH_SHORT).show()
-    } else Toast.makeText(context, "Email or Password null", Toast.LENGTH_SHORT).show()
-}
-
-// Sign-out
-fun signOut() {
-    Firebase.auth.signOut()
-    _login.value = null
-}
-
-// Check current user
-private fun checkCurrentUser(): FirebaseUser? {
-    val user = Firebase.auth.currentUser
-    if (user != null) {
-        // user is signed in
-        return user
-    } else {
-        // no user is signed in
-        return null
+                } else Toast.makeText(context, "Password has length more 6 character", Toast.LENGTH_SHORT).show()
+            } else Toast.makeText(context, "Invalid email format", Toast.LENGTH_SHORT).show()
+        } else Toast.makeText(context, "Email or Password null", Toast.LENGTH_SHORT).show()
     }
-}
 
-// Add current user data to server
-private fun addUserData() {
-    val user = User(checkCurrentUser()?.uid,checkCurrentUser()?.email,Constants.getUsernameFromEmail(checkCurrentUser()?.email), "default", emptyList<String>(), emptyList<DocumentReference>())
-    db.collection("user")
-        .document(checkCurrentUser()!!.uid).set(user.toHashMap())
-        .addOnSuccessListener { documentReference ->
-            Log.d(TAG, "DocumentSnapshot added with ID: success")
-        }
-        .addOnFailureListener { exception ->
-            Log.d(TAG, "addUserData: failed")
-        }
-}
+    // Sign-out
+    fun signOut() {
+        Firebase.auth.signOut()
+        _login.value = null
+    }
 
-companion object {
-    private const val TAG = "login_regist"
-}
+    // Check current user
+    private fun checkCurrentUser(): FirebaseUser? {
+        val user = Firebase.auth.currentUser
+        if (user != null) {
+            // user is signed in
+            return user
+        } else {
+            // no user is signed in
+            return null
+        }
+    }
+
+    // Add current user data to server
+    private fun addUserData() {
+        val user = User(
+            checkCurrentUser()?.uid,
+            checkCurrentUser()?.email,
+            Constants.getUsernameFromEmail(checkCurrentUser()?.email),
+            "default",
+            emptyList<String>(),
+            emptyList<DocumentReference>()
+        )
+        db.collection("user")
+            .document(checkCurrentUser()!!.uid).set(user.toHashMap())
+            .addOnSuccessListener {
+                Log.d(TAG, "addUserData: success")
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "addUserData: failed")
+            }
+    }
+
+    companion object {
+        private const val TAG = "LoginRegistViewModel"
+    }
 }

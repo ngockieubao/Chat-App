@@ -1,7 +1,6 @@
 package com.tomosia.chatapp.model
 
 import com.google.firebase.firestore.DocumentReference
-import com.tomosia.chatapp.util.Constants
 import java.io.Serializable
 
 data class User(

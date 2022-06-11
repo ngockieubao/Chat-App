@@ -64,18 +64,20 @@ class ContactViewModel : ViewModel() {
     }
 
     fun readListFriend() {
-        userRef.document(checkCurrentUser()!!.uid).get()
-            .addOnSuccessListener { result ->
-                val userToObject = result.toObject<User>()
-                val listFriendToObject = userToObject!!.listFriend
-                listFriendShow.clear()
-                if (listFriendToObject != null) {
-                    showListFriend(listFriendToObject)
+        checkCurrentUser()?.uid?.let {
+            userRef.document(it).get()
+                .addOnSuccessListener { result ->
+                    val userToObject = result.toObject<User>()
+                    val listFriendToObject = userToObject!!.listFriend
+                    listFriendShow.clear()
+                    if (listFriendToObject != null) {
+                        showListFriend(listFriendToObject)
+                    }
                 }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "readListFriend fail: ${exception.message}")
-            }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "readListFriend fail: ${exception.message}")
+                }
+        }
     }
 
     private fun showListFriend(listFriendToObject: List<String>) {

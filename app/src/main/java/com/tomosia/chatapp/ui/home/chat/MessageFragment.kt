@@ -52,7 +52,7 @@ class MessageFragment : Fragment() {
             chatViewModel.sendMessage(
                 chatViewModel.checkCurrentUser()!!.uid,
                 "${bundleUserChoose.userID}",
-                "${bundleUserChoose.userID}",
+                "uGTmOFbOA0mqYzIlHLgv",
                 "Hi, ${bundleUserChoose.username}"
             )
         }

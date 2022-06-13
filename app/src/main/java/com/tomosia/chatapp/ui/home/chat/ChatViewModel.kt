@@ -26,49 +26,41 @@ class ChatViewModel : ViewModel() {
     val message: LiveData<Message>
         get() = _message
 
-    suspend fun sendMessage(idSender: String, idReceiver: String, idConversation: String, message: String) {
-//        if (idConversation != null) {
-//            val conversation = hashMapOf(
-//                "lastMessage" to message,
-//                "lastMessageTime" to Timestamp.now(),
-//                "listUser" to arrayListOf(idSender, idReceiver)
-//            )
-//
-//            val message = hashMapOf(
-//                "idSend" to idSender,
-//                "message" to message,
-//                "messageTime" to Timestamp.now(),
-//            )
-//
-//            try {
-//                val result = db.collection("conversation").add(conversation).await()
-//                val result2 =
-//                    db.collection("conversation").document(result.id).collection("message").add(message)
-//                        .await()
-//                val document = db.document("conversation/${result.id}")
-//                val result3 = db.collection("user").document(idSender)
-//                    .update("listConversation", FieldValue.arrayUnion(document))
-//                val result4 = db.collection("user").document(idReceiver)
-//                    .update("listConversation", FieldValue.arrayUnion(document))
-//            } catch (e: Exception) {
-//
-//            }
-//        } else {
-        createNewConversation(idSender, idReceiver, idConversation, message)
-//        }
+    suspend fun sendMessage(idSender: String, idReceiver: String, idConversation: String?, message: String) {
+        if (idConversation != null) {
+            val conversation = hashMapOf(
+                "lastMessage" to message,
+                "lastMessageTime" to Timestamp.now(),
+                "listUser" to arrayListOf(idSender, idReceiver)
+            )
+
+            val message = hashMapOf(
+                "idSend" to idSender,
+                "message" to message,
+                "messageTime" to Timestamp.now(),
+            )
+            try {
+                val result = db.collection("conversation").document(idConversation).set(conversation).await()
+                val result2 =
+                    db.collection("conversation").document(idConversation).collection("message").add(message)
+                        .await()
+            } catch (ex: Exception) {
+                Log.d(TAG, "sendMessage: ${ex.message}")
+            }
+        } else {
+            createNewConversation(idSender, idReceiver, message)
+        }
     }
 
     private suspend fun createNewConversation(
         idSender: String,
         idReceiver: String,
-        idConversation: String,
         message: String
     ) {
         val conversation = hashMapOf(
             "lastMessage" to message,
             "lastMessageTime" to Timestamp.now(),
-            "listUser" to arrayListOf(idSender, idReceiver),
-            "idConversation" to idConversation
+            "listUser" to arrayListOf(idSender, idReceiver)
         )
 
         val message = hashMapOf(
@@ -114,7 +106,7 @@ class ChatViewModel : ViewModel() {
             Log.d(TAG, ": Update id receiver")
 
         } catch (ex: Exception) {
-            Log.d(TAG, "createNewConversation: ${ex.message} -bug")
+            Log.d(TAG, "createNewConversation: ${ex.message}")
         }
     }
 

@@ -1,7 +1,6 @@
 package com.tomosia.chatapp.ui.home.contact
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -33,7 +32,6 @@ class ContactAdapter(val chatInterface: ChatInterface) : RecyclerView.Adapter<Co
             )
             rcvHomeContactBinding.lnUserInformation.setOnClickListener {
                 chatInterface.clickToCreateMessage(item)
-                Log.d(TAG, "create message")
             }
         }
     }

@@ -81,6 +81,6 @@ class LoginFragment : Fragment() {
 // use email verify
 
     companion object {
-        private const val TAG = "login"
+        private const val TAG = "LoginFragment"
     }
 }

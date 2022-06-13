@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tomosia.chatapp.R
@@ -13,6 +14,7 @@ import com.tomosia.chatapp.databinding.FragmentChatBottomSheetBinding
 import com.tomosia.chatapp.model.User
 import com.tomosia.chatapp.ui.home.contact.ContactAdapter
 import com.tomosia.chatapp.ui.home.contact.ContactViewModel
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ChatBottomSheetFragment : BottomSheetDialogFragment(), ChatInterface {
@@ -28,17 +30,18 @@ class ChatBottomSheetFragment : BottomSheetDialogFragment(), ChatInterface {
         // Inflate the layout for this fragment
         binding = FragmentChatBottomSheetBinding.inflate(inflater, container, false)
 
-        contactViewModel.readListFriend()
         contactAdapter = ContactAdapter(this)
+        binding.rcvMessageBottomSheet.adapter = contactAdapter
+        contactViewModel.readListFriend()
+
         contactViewModel.friends.observe(this.viewLifecycleOwner) {
             contactAdapter.listFriend = it
         }
 
-        binding.rcvMessageBottomSheet.adapter = contactAdapter
-
         binding.tvCancelChatBottomSheet.setOnClickListener {
             this.dismiss()
         }
+
         return binding.root
     }
 
@@ -46,6 +49,9 @@ class ChatBottomSheetFragment : BottomSheetDialogFragment(), ChatInterface {
         val bundle = bundleOf("userChoose" to user)
         findNavController().navigate(R.id.action_chatBottomSheetFragment_to_messageFragment, bundle)
         chatViewModel.createMessage(user)
+//        lifecycleScope.launch {
+//            chatViewModel.sendMessage("4h7cVWY6g1dsjVHn3ZQrfxiE22C2", "ZYQhxffdKUW1MRhiK7W5uEm05Al1", "hello you!!!", "message = ")
+//        }
         Toast.makeText(requireActivity(), "Clicked to create message", Toast.LENGTH_SHORT).show()
     }
 }

@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
@@ -49,10 +48,18 @@ class MessageFragment : Fragment() {
 
         //
         lifecycleScope.launch {
-            chatViewModel.sendMessage(
+//            chatViewModel.sendMessage(
+//                chatViewModel.checkCurrentUser()!!.uid,
+//                "${bundleUserChoose.userID}",
+//                "${bundleUserChoose.listConversation}",
+//                "Hi, ${bundleUserChoose.username}"
+//            )
+            chatViewModel.checkConversation(
+                chatViewModel.checkCurrentUser()!!.uid,
+                bundleUserChoose.listConversation,
                 chatViewModel.checkCurrentUser()!!.uid,
                 "${bundleUserChoose.userID}",
-                "uGTmOFbOA0mqYzIlHLgv",
+                null,
                 "Hi, ${bundleUserChoose.username}"
             )
         }

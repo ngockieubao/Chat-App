@@ -7,10 +7,15 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
+import com.tomosia.chatapp.model.Conversation
 import com.tomosia.chatapp.model.Message
+import com.tomosia.chatapp.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,7 +31,12 @@ class ChatViewModel : ViewModel() {
     val message: LiveData<Message>
         get() = _message
 
-    suspend fun sendMessage(idSender: String, idReceiver: String, idConversation: String?, message: String) {
+    suspend fun sendMessage(
+        idSender: String,
+        idReceiver: String,
+        idConversation: String?,
+        message: String
+    ) {
         if (idConversation != null) {
             val conversation = hashMapOf(
                 "lastMessage" to message,
@@ -45,10 +55,33 @@ class ChatViewModel : ViewModel() {
                     db.collection("conversation").document(idConversation).collection("message").add(message)
                         .await()
             } catch (ex: Exception) {
-                Log.d(TAG, "sendMessage: ${ex.message}")
+                Log.d(TAG, "sendMessage bb: ${ex.message}")
             }
         } else {
             createNewConversation(idSender, idReceiver, message)
+        }
+    }
+
+    suspend fun checkConversation(
+        idCurrentUser: String,
+        idListUser: List<DocumentReference>?,
+        idSender: String,
+        idReceiver: String,
+        idConversation: String?,
+        message: String
+    ) {
+        if (idListUser != null) {
+            val us = db.collection("user").document(checkCurrentUser()!!.uid).get().await()
+            val us1 = us.toObject<User>()
+            Log.d(TAG, "checkConversation:$us ---- $us1 ---- ${us1?.listConversation}")
+//            for (i in 0..idListUser.size.minus(1)) {
+//                for (j in ob){
+//                    if () {
+//                        sendMessage(idSender, idReceiver, idConversation, message)
+//                    } else
+//                        createNewConversation(idSender, idReceiver, message)
+//                }
+//            }
         }
     }
 
@@ -74,7 +107,6 @@ class ChatViewModel : ViewModel() {
             val result = db.collection("conversation")
                 .add(conversation)
                 .await()
-            Log.d(TAG, ": Add conversation")
 
             // Add message
             val result2 =
@@ -83,11 +115,9 @@ class ChatViewModel : ViewModel() {
                     .collection("message")
                     .add(message)
                     .await()
-            Log.d(TAG, ": Add message")
 
             //
             val document = db.document("conversation/${result.id}")
-            Log.d(TAG, ": asdasd")
 
             // Update id sender
             val result3 =
@@ -95,7 +125,6 @@ class ChatViewModel : ViewModel() {
                     .document(idSender)
                     .update("listConversation", FieldValue.arrayUnion(document))
                     .await()
-            Log.d(TAG, ": Update id sender")
 
             // Update id receiver
             val result4 =
@@ -103,10 +132,17 @@ class ChatViewModel : ViewModel() {
                     .document(idReceiver)
                     .update("listConversation", FieldValue.arrayUnion(document))
                     .await()
-            Log.d(TAG, ": Update id receiver")
 
         } catch (ex: Exception) {
             Log.d(TAG, "createNewConversation: ${ex.message}")
+        }
+    }
+
+    suspend fun parseListConversation(test: List<DocumentReference>?) {
+        val ob = db.collection("user").document(checkCurrentUser()!!.uid).get().await()
+        val ob1 = ob.toObject<User>()
+        if (ob1 != null) {
+
         }
     }
 

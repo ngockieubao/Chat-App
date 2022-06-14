@@ -49,12 +49,13 @@ class MessageFragment : Fragment() {
 
         //
         lifecycleScope.launch {
-            chatViewModel.sendMessage(
-                chatViewModel.checkCurrentUser()!!.uid,
-                "${bundleUserChoose.userID}",
-                "uGTmOFbOA0mqYzIlHLgv",
-                "Hi, ${bundleUserChoose.username}"
-            )
+            chatViewModel.checkCurrentUser()?.let {
+                chatViewModel.checkConversation(
+                    it.uid,
+                    "${bundleUserChoose.userID}",
+                    "Hi, ${bundleUserChoose.username}"
+                )
+            }
         }
 
         binding.imageViewSendMessage.setOnClickListener {

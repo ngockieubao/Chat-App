@@ -7,9 +7,11 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
+import com.tomosia.chatapp.model.Conversation
 import com.tomosia.chatapp.model.Message
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,33 +28,33 @@ class ChatViewModel : ViewModel() {
     val message: LiveData<Message>
         get() = _message
 
-    suspend fun sendMessage(idSender: String, idReceiver: String, idConversation: String?, message: String) {
-        if (idConversation != null) {
-            val conversation = hashMapOf(
-                "lastMessage" to message,
-                "lastMessageTime" to Timestamp.now(),
-                "listUser" to arrayListOf(idSender, idReceiver)
-            )
+    suspend fun sendMessage(
+        idSender: String,
+        idReceiver: String,
+        message: String
+    ) {
+        val conversation = hashMapOf(
+            "lastMessage" to message,
+            "lastMessageTime" to Timestamp.now(),
+            "listUser" to arrayListOf(idSender, idReceiver)
+        )
 
-            val message = hashMapOf(
-                "idSend" to idSender,
-                "message" to message,
-                "messageTime" to Timestamp.now(),
-            )
-            try {
-                val result = db.collection("conversation").document(idConversation).set(conversation).await()
-                val result2 =
-                    db.collection("conversation").document(idConversation).collection("message").add(message)
-                        .await()
-            } catch (ex: Exception) {
-                Log.d(TAG, "sendMessage: ${ex.message}")
-            }
-        } else {
-            createNewConversation(idSender, idReceiver, message)
+        val message = hashMapOf(
+            "idSend" to idSender,
+            "message" to message,
+            "messageTime" to Timestamp.now(),
+        )
+        try {
+            val result = db.collection("conversation").document(id).set(conversation).await()
+            val result2 =
+                db.collection("conversation").document(id).collection("message").add(message)
+                    .await()
+        } catch (ex: Exception) {
+            Log.d(TAG, "sendMessage: ${ex.message}")
         }
     }
 
-    private suspend fun createNewConversation(
+    suspend fun createNewConversation(
         idSender: String,
         idReceiver: String,
         message: String
@@ -74,7 +76,6 @@ class ChatViewModel : ViewModel() {
             val result = db.collection("conversation")
                 .add(conversation)
                 .await()
-            Log.d(TAG, ": Add conversation")
 
             // Add message
             val result2 =
@@ -83,31 +84,35 @@ class ChatViewModel : ViewModel() {
                     .collection("message")
                     .add(message)
                     .await()
-            Log.d(TAG, ": Add message")
-
-            //
-            val document = db.document("conversation/${result.id}")
-            Log.d(TAG, ": asdasd")
-
-            // Update id sender
-            val result3 =
-                db.collection("user")
-                    .document(idSender)
-                    .update("listConversation", FieldValue.arrayUnion(document))
-                    .await()
-            Log.d(TAG, ": Update id sender")
-
-            // Update id receiver
-            val result4 =
-                db.collection("user")
-                    .document(idReceiver)
-                    .update("listConversation", FieldValue.arrayUnion(document))
-                    .await()
-            Log.d(TAG, ": Update id receiver")
 
         } catch (ex: Exception) {
             Log.d(TAG, "createNewConversation: ${ex.message}")
         }
+    }
+
+    private lateinit var id: String
+    suspend fun checkConversation(
+        idSender: String,
+        idReceiver: String,
+        message: String
+    ) {
+//        val curUser = checkCurrentUser()?.uid ?: return
+        val conRef = db.collection("conversation")
+        val query = conRef.whereEqualTo(    "listUser", listOf(idSender, idReceiver)).get().await() // list snapshot document cua current user
+        if (query.documents.isNotEmpty()) {
+            // get document conversation
+            val doc = query.documents.first()
+            id = (doc as QueryDocumentSnapshot).id
+            Log.d(TAG, "checkConversation: $doc")
+            val queryToObject = query.toObjects<Conversation>()
+            for (i in queryToObject) {
+                if (i.listUser.contains(idSender) && i.listUser.contains(idReceiver)) {
+                    Log.d(TAG, "checkConversation doc id: ${doc.id}")
+                    sendMessage(idSender, idReceiver, message)
+                }
+            }
+        } else
+            createNewConversation(idSender, idReceiver, message)
     }
 
     fun checkCurrentUser(): FirebaseUser? {

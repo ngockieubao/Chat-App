@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.RcvHomeMessageBinding
+import com.tomosia.chatapp.model.Conversation
 import com.tomosia.chatapp.model.Message
 
 class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
-    var listMessage = listOf<Message>()
+    var listConversation = listOf<Conversation>()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -21,7 +22,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     inner class ChatViewHolder(private val rcvHomeMessageBinding: RcvHomeMessageBinding) :
         RecyclerView.ViewHolder(rcvHomeMessageBinding.root) {
 
-        fun bind(item: Message?) {
+        fun bind(item: Conversation?) {
             if (item == null) return
             rcvHomeMessageBinding.item = item
             rcvHomeMessageBinding.imageViewHomeMessageAvatar.setImageResource(
@@ -32,7 +33,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
             )
 
             rcvHomeMessageBinding.lnMessage.setOnClickListener {
-                Log.d(TAG, "created message")
+                Log.d(TAG, "nav to message")
             }
         }
     }
@@ -46,11 +47,11 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        holder.bind(listMessage[position])
+        holder.bind(listConversation[position])
     }
 
     override fun getItemCount(): Int {
-        return listMessage.size
+        return listConversation.size
     }
 
     companion object{

@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentChatBinding
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ChatFragment : Fragment() {
@@ -23,7 +25,13 @@ class ChatFragment : Fragment() {
         binding = FragmentChatBinding.inflate(inflater, container, false)
 
         chatAdapter = ChatAdapter()
-//        chatViewModel
+        lifecycleScope.launch {
+            chatViewModel.readConversation()
+        }
+        chatViewModel.conversation.observe(this.viewLifecycleOwner) {
+            chatAdapter.listConversation = it
+        }
+        binding.rcvMessage.adapter = chatAdapter
 
         chatViewModel.checkCurrentUser()
         val fab: View = binding.fabChat

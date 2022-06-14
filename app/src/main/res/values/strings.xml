@@ -10,4 +10,7 @@
     <string name="string_contact_title">Danh bạ</string>
     <string name="string_cancel">Huỷ</string>
     <string name="string_friend_title">Thêm bạn</string>
+
+    <!-- fm-time-->
+    <string name="fm_time">HH:mm</string>
 </resources>

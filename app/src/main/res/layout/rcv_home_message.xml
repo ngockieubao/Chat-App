@@ -7,7 +7,7 @@
 
         <variable
             name="item"
-            type="com.tomosia.chatapp.model.Message" />
+            type="com.tomosia.chatapp.model.Conversation" />
     </data>
 
     <LinearLayout
@@ -51,9 +51,10 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
-                android:text="Content message"
+                android:text="@{item.lastMessage}"
                 android:textColor="@color/black"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                tools:text="Last message" />
         </LinearLayout>
 
         <TextView
@@ -62,7 +63,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="16:00"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            app:setTime="@{item.lastMessageTime}"
+            tools:text="16:00" />
     </LinearLayout>
 </layout>

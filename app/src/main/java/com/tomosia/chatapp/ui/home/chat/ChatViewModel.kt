@@ -24,11 +24,16 @@ class ChatViewModel : ViewModel() {
     private val job = Job()
     private val scope: CoroutineScope = CoroutineScope(job + Dispatchers.IO)
 
-    private lateinit var idDocument: String
-
     private val _message = MutableLiveData<Message>()
     val message: LiveData<Message>
         get() = _message
+
+    private val _conversation = MutableLiveData<List<Conversation>>()
+    val conversation: LiveData<List<Conversation>>
+        get() = _conversation
+
+    private lateinit var idDocument: String
+    private val conRef = db.collection("conversation")
 
     suspend fun sendMessage(
         idSender: String,
@@ -47,10 +52,10 @@ class ChatViewModel : ViewModel() {
             "messageTime" to Timestamp.now(),
         )
         try {
-            val result = db.collection("conversation").document(idDocument).set(conversation).await()
+            val result = conRef.document(idDocument).set(conversation).await()
             val result2 =
-                db.collection("conversation").document(idDocument).collection("message").add(message)
-                    .await()
+                conRef.document(idDocument).collection("message")
+                    .add(message).await()
         } catch (ex: Exception) {
             Log.d(TAG, "sendMessage: ${ex.message}")
         }
@@ -75,13 +80,13 @@ class ChatViewModel : ViewModel() {
 
         try {
             // Add conversation
-            val result = db.collection("conversation")
+            val result = conRef
                 .add(conversation)
                 .await()
 
             // Add message
             val result2 =
-                db.collection("conversation")
+                conRef
                     .document(result.id)
                     .collection("message")
                     .add(message)
@@ -96,7 +101,6 @@ class ChatViewModel : ViewModel() {
         idSender: String,
         idReceiver: String
     ) {
-        val conRef = db.collection("conversation")
         val query = conRef.whereEqualTo("listUser", listOf(idSender, idReceiver)).get().await() // list snapshot document cua current user
         if (query.documents.isNotEmpty()) {
             // get document conversation
@@ -110,6 +114,13 @@ class ChatViewModel : ViewModel() {
             }
         } else
             createNewConversation(idSender, idReceiver, "This is first message")
+    }
+
+    suspend fun readConversation() {
+        val result = conRef.get().await()
+        Log.d(TAG, "readConversation: ${result.toObjects<Conversation>()}")
+        val resCon = result.toObjects<Conversation>()
+        _conversation.value = resCon
     }
 
     fun checkCurrentUser(): FirebaseUser? {

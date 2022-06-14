@@ -121,14 +121,16 @@ class LoginRegistViewModel() : ViewModel() {
             emptyList<String>(),
             emptyList<DocumentReference>()
         )
-        db.collection("user")
-            .document(checkCurrentUser()!!.uid).set(user.toHashMap())
-            .addOnSuccessListener {
-                Log.d(TAG, "addUserData: success")
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "addUserData: failed")
-            }
+        checkCurrentUser()?.uid?.let {
+            db.collection("user")
+                .document(it).set(user.toHashMap())
+                .addOnSuccessListener {
+                    Log.d(TAG, "addUserData: success")
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "addUserData: failed")
+                }
+        }
     }
 
     companion object {

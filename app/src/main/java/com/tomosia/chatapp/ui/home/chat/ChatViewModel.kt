@@ -24,6 +24,8 @@ class ChatViewModel : ViewModel() {
     private val job = Job()
     private val scope: CoroutineScope = CoroutineScope(job + Dispatchers.IO)
 
+    private lateinit var idDocument: String
+
     private val _message = MutableLiveData<Message>()
     val message: LiveData<Message>
         get() = _message
@@ -31,7 +33,7 @@ class ChatViewModel : ViewModel() {
     suspend fun sendMessage(
         idSender: String,
         idReceiver: String,
-        message: String
+        message: String?
     ) {
         val conversation = hashMapOf(
             "lastMessage" to message,
@@ -45,9 +47,9 @@ class ChatViewModel : ViewModel() {
             "messageTime" to Timestamp.now(),
         )
         try {
-            val result = db.collection("conversation").document(id).set(conversation).await()
+            val result = db.collection("conversation").document(idDocument).set(conversation).await()
             val result2 =
-                db.collection("conversation").document(id).collection("message").add(message)
+                db.collection("conversation").document(idDocument).collection("message").add(message)
                     .await()
         } catch (ex: Exception) {
             Log.d(TAG, "sendMessage: ${ex.message}")
@@ -90,29 +92,24 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    private lateinit var id: String
     suspend fun checkConversation(
         idSender: String,
-        idReceiver: String,
-        message: String
+        idReceiver: String
     ) {
-//        val curUser = checkCurrentUser()?.uid ?: return
         val conRef = db.collection("conversation")
-        val query = conRef.whereEqualTo(    "listUser", listOf(idSender, idReceiver)).get().await() // list snapshot document cua current user
+        val query = conRef.whereEqualTo("listUser", listOf(idSender, idReceiver)).get().await() // list snapshot document cua current user
         if (query.documents.isNotEmpty()) {
             // get document conversation
             val doc = query.documents.first()
-            id = (doc as QueryDocumentSnapshot).id
-            Log.d(TAG, "checkConversation: $doc")
+            idDocument = (doc as QueryDocumentSnapshot).id
             val queryToObject = query.toObjects<Conversation>()
             for (i in queryToObject) {
                 if (i.listUser.contains(idSender) && i.listUser.contains(idReceiver)) {
-                    Log.d(TAG, "checkConversation doc id: ${doc.id}")
-                    sendMessage(idSender, idReceiver, message)
+                    sendMessage(idSender, idReceiver, null)
                 }
             }
         } else
-            createNewConversation(idSender, idReceiver, message)
+            createNewConversation(idSender, idReceiver, "This is first message")
     }
 
     fun checkCurrentUser(): FirebaseUser? {

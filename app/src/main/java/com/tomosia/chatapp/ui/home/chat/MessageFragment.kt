@@ -52,8 +52,7 @@ class MessageFragment : Fragment() {
             chatViewModel.checkCurrentUser()?.let {
                 chatViewModel.checkConversation(
                     it.uid,
-                    "${bundleUserChoose.userID}",
-                    "Hi, ${bundleUserChoose.username}"
+                    "${bundleUserChoose.userID}"
                 )
             }
         }
@@ -61,7 +60,16 @@ class MessageFragment : Fragment() {
         binding.imageViewSendMessage.setOnClickListener {
 //            val bundle = bundleOf("sendMessage" to message)
 //            findNavController().navigate(R.id.action_messageFragment_to_chatBottomSheetFragment, bundle)
-            Toast.makeText(requireActivity(), "sent $message", Toast.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                chatViewModel.checkCurrentUser()?.uid?.let { it1 ->
+                    chatViewModel.sendMessage(
+                        it1,
+                        "${bundleUserChoose.userID}",
+                        message
+                    )
+                }
+            }
+            binding.edtTextMessage.text.clear()
         }
 
         return binding.root

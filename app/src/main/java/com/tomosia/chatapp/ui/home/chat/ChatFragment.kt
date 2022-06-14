@@ -12,8 +12,8 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class ChatFragment : Fragment() {
     private lateinit var binding: FragmentChatBinding
-
     private val chatViewModel: ChatViewModel by sharedViewModel()
+    private lateinit var chatAdapter: ChatAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -21,6 +21,9 @@ class ChatFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentChatBinding.inflate(inflater, container, false)
+
+        chatAdapter = ChatAdapter()
+//        chatViewModel
 
         chatViewModel.checkCurrentUser()
         val fab: View = binding.fabChat

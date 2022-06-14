@@ -5,14 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentChatBinding
+import com.tomosia.chatapp.model.Conversation
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class ChatFragment : Fragment() {
+class ChatFragment : Fragment(), ChatInterface {
     private lateinit var binding: FragmentChatBinding
     private val chatViewModel: ChatViewModel by sharedViewModel()
     private lateinit var chatAdapter: ChatAdapter
@@ -24,11 +26,12 @@ class ChatFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentChatBinding.inflate(inflater, container, false)
 
-        chatAdapter = ChatAdapter()
+        chatAdapter = ChatAdapter(this)
         lifecycleScope.launch {
             chatViewModel.readConversation()
         }
         chatViewModel.conversation.observe(this.viewLifecycleOwner) {
+            if (it == null) return@observe
             chatAdapter.listConversation = it
         }
         binding.rcvMessage.adapter = chatAdapter
@@ -40,5 +43,10 @@ class ChatFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    override fun clickToChat(conversation: Conversation) {
+//        val bundle = bundleOf("conversationChosen" to conversation)
+//        findNavController().navigate(R.id.action_chatFragment_to_messageFragment, bundle)
     }
 }

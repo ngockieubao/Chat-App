@@ -40,10 +40,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Username"
+                android:text="@{item.nameConversation}"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                tools:ignore="NestedWeights" />
+                tools:ignore="NestedWeights"
+                tools:text="Username" />
 
             <TextView
                 android:id="@+id/tv_home_message_last_content_chat"

@@ -61,15 +61,17 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    suspend fun createNewConversation(
+    private suspend fun createNewConversation(
         idSender: String,
         idReceiver: String,
-        message: String
+        message: String,
+        nameConversation: String
     ) {
         val conversation = hashMapOf(
             "lastMessage" to message,
             "lastMessageTime" to Timestamp.now(),
-            "listUser" to arrayListOf(idSender, idReceiver)
+            "listUser" to arrayListOf(idSender, idReceiver),
+            "nameConversation" to nameConversation
         )
 
         val message = hashMapOf(
@@ -99,9 +101,15 @@ class ChatViewModel : ViewModel() {
 
     suspend fun checkConversation(
         idSender: String,
-        idReceiver: String
+        idReceiver: String,
+        nameConversation: String
     ) {
-        val query = conRef.whereEqualTo("listUser", listOf(idSender, idReceiver)).get().await() // list snapshot document cua current user
+        // List snapshot document cua current user
+        val query =
+            conRef.whereEqualTo(
+                "listUser",
+                listOf(idSender, idReceiver)
+            ).get().await()
         if (query.documents.isNotEmpty()) {
             // get document conversation
             val doc = query.documents.first()
@@ -113,12 +121,11 @@ class ChatViewModel : ViewModel() {
                 }
             }
         } else
-            createNewConversation(idSender, idReceiver, "This is first message")
+            createNewConversation(idSender, idReceiver, "This is first message", nameConversation)
     }
 
     suspend fun readConversation() {
         val result = conRef.get().await()
-        Log.d(TAG, "readConversation: ${result.toObjects<Conversation>()}")
         val resCon = result.toObjects<Conversation>()
         _conversation.value = resCon
     }

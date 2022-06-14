@@ -11,11 +11,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentChatBottomSheetBinding
 import com.tomosia.chatapp.model.User
+import com.tomosia.chatapp.ui.home.contact.CreateMessageInterface
 import com.tomosia.chatapp.ui.home.contact.ContactAdapter
 import com.tomosia.chatapp.ui.home.contact.ContactViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
-class ChatBottomSheetFragment : BottomSheetDialogFragment(), ChatInterface {
+class CreateMessageBottomSheetFragment : BottomSheetDialogFragment(), CreateMessageInterface {
     private lateinit var binding: FragmentChatBottomSheetBinding
     private val contactViewModel: ContactViewModel by sharedViewModel()
     private lateinit var contactAdapter: ContactAdapter
@@ -45,6 +46,5 @@ class ChatBottomSheetFragment : BottomSheetDialogFragment(), ChatInterface {
     override fun clickToCreateMessage(user: User) {
         val bundle = bundleOf("userChoose" to user)
         findNavController().navigate(R.id.action_chatBottomSheetFragment_to_messageFragment, bundle)
-        Toast.makeText(requireActivity(), "Clicked to create message", Toast.LENGTH_SHORT).show()
     }
 }

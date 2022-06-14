@@ -7,9 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.RcvHomeContactBinding
 import com.tomosia.chatapp.model.User
-import com.tomosia.chatapp.ui.home.chat.ChatInterface
 
-class ContactAdapter(val chatInterface: ChatInterface) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
+class ContactAdapter(val createMessageInterface: CreateMessageInterface) : RecyclerView.Adapter<ContactAdapter.ContactViewHolder>() {
 
     var listFriend = listOf<User>()
         @SuppressLint("NotifyDataSetChanged")
@@ -31,7 +30,7 @@ class ContactAdapter(val chatInterface: ChatInterface) : RecyclerView.Adapter<Co
                 }
             )
             rcvHomeContactBinding.lnUserInformation.setOnClickListener {
-                chatInterface.clickToCreateMessage(item)
+                createMessageInterface.clickToCreateMessage(item)
             }
         }
     }

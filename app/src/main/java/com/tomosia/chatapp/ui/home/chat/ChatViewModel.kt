@@ -18,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.tasks.await
 
-class ChatViewModel : ViewModel() {
+class ChatViewModel : ViewModel(), ChatInterface {
     private val db = Firebase.firestore
     private val auth = Firebase.auth.currentUser
     private val job = Job()
@@ -38,12 +38,14 @@ class ChatViewModel : ViewModel() {
     suspend fun sendMessage(
         idSender: String,
         idReceiver: String,
-        message: String?
+        message: String?,
+        nameConversation: String
     ) {
         val conversation = hashMapOf(
             "lastMessage" to message,
             "lastMessageTime" to Timestamp.now(),
-            "listUser" to arrayListOf(idSender, idReceiver)
+            "listUser" to arrayListOf(idSender, idReceiver),
+            "nameConversation" to nameConversation
         )
 
         val message = hashMapOf(
@@ -61,15 +63,17 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    suspend fun createNewConversation(
+    private suspend fun createNewConversation(
         idSender: String,
         idReceiver: String,
-        message: String
+        message: String,
+        nameConversation: String
     ) {
         val conversation = hashMapOf(
             "lastMessage" to message,
             "lastMessageTime" to Timestamp.now(),
-            "listUser" to arrayListOf(idSender, idReceiver)
+            "listUser" to arrayListOf(idSender, idReceiver),
+            "nameConversation" to nameConversation
         )
 
         val message = hashMapOf(
@@ -99,9 +103,15 @@ class ChatViewModel : ViewModel() {
 
     suspend fun checkConversation(
         idSender: String,
-        idReceiver: String
+        idReceiver: String,
+        nameConversation: String
     ) {
-        val query = conRef.whereEqualTo("listUser", listOf(idSender, idReceiver)).get().await() // list snapshot document cua current user
+        // List snapshot document of current user
+        val query =
+            conRef.whereEqualTo(
+                "listUser",
+                listOf(idSender, idReceiver)
+            ).get().await()
         if (query.documents.isNotEmpty()) {
             // get document conversation
             val doc = query.documents.first()
@@ -109,16 +119,17 @@ class ChatViewModel : ViewModel() {
             val queryToObject = query.toObjects<Conversation>()
             for (i in queryToObject) {
                 if (i.listUser.contains(idSender) && i.listUser.contains(idReceiver)) {
-                    sendMessage(idSender, idReceiver, null)
+                    // TODO nav to conversation
+                    clickToChat(queryToObject.first())
+//                    sendMessage(idSender, idReceiver, null)
                 }
             }
         } else
-            createNewConversation(idSender, idReceiver, "This is first message")
+            createNewConversation(idSender, idReceiver, "This is first message", nameConversation)
     }
 
     suspend fun readConversation() {
         val result = conRef.get().await()
-        Log.d(TAG, "readConversation: ${result.toObjects<Conversation>()}")
         val resCon = result.toObjects<Conversation>()
         _conversation.value = resCon
     }
@@ -136,5 +147,8 @@ class ChatViewModel : ViewModel() {
 
     companion object {
         private const val TAG = "ChatViewModel"
+    }
+
+    override fun clickToChat(conversation: Conversation) {
     }
 }

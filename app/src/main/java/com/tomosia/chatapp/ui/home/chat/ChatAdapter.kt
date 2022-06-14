@@ -10,7 +10,7 @@ import com.tomosia.chatapp.databinding.RcvHomeMessageBinding
 import com.tomosia.chatapp.model.Conversation
 import com.tomosia.chatapp.model.Message
 
-class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
+class ChatAdapter(val chatInterface: ChatInterface) : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
 
     var listConversation = listOf<Conversation>()
         @SuppressLint("NotifyDataSetChanged")
@@ -31,8 +31,10 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
                     else -> R.drawable.ic_robot
                 }
             )
+            rcvHomeMessageBinding.tvHomeMessageTitle.text = item.nameConversation
 
             rcvHomeMessageBinding.lnMessage.setOnClickListener {
+                chatInterface.clickToChat(item)
                 Log.d(TAG, "nav to message")
             }
         }
@@ -54,7 +56,7 @@ class ChatAdapter : RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
         return listConversation.size
     }
 
-    companion object{
+    companion object {
         private const val TAG = "ChatAdapter"
     }
 }

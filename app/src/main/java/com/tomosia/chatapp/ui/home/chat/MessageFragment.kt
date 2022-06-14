@@ -3,16 +3,16 @@ package com.tomosia.chatapp.ui.home.chat
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentMessageBinding
+import com.tomosia.chatapp.model.Conversation
 import com.tomosia.chatapp.model.User
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -36,6 +36,7 @@ class MessageFragment : Fragment() {
         val bundleUserChoose = arguments?.getSerializable("userChoose") as User
         binding.tvChatUsername.text = bundleUserChoose.username
 
+
         binding.edtTextMessage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -47,30 +48,32 @@ class MessageFragment : Fragment() {
             }
         })
 
-        //
+        // Conversation
         lifecycleScope.launch {
             chatViewModel.checkCurrentUser()?.let {
                 chatViewModel.checkConversation(
                     it.uid,
-                    "${bundleUserChoose.userID}"
+                    "${bundleUserChoose.userID}",
+                    "${bundleUserChoose.username}"
                 )
             }
         }
 
+        // Send message
         binding.imageViewSendMessage.setOnClickListener {
-//            val bundle = bundleOf("sendMessage" to message)
-//            findNavController().navigate(R.id.action_messageFragment_to_chatBottomSheetFragment, bundle)
             lifecycleScope.launch {
-                chatViewModel.checkCurrentUser()?.uid?.let { it1 ->
+                chatViewModel.checkCurrentUser()?.uid?.let { idSender ->
                     chatViewModel.sendMessage(
-                        it1,
+                        idSender,
                         "${bundleUserChoose.userID}",
-                        message
+                        message,
+                        "${bundleUserChoose.username}"
                     )
                 }
             }
             binding.edtTextMessage.text.clear()
         }
+
 
         return binding.root
     }

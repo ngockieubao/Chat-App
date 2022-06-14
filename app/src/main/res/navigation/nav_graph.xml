@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_chatFragment_to_chatBottomSheetFragment"
             app:destination="@id/chatBottomSheetFragment" />
+        <action
+            android:id="@+id/action_chatFragment_to_messageFragment"
+            app:destination="@id/messageFragment" />
     </fragment>
     <dialog
         android:id="@+id/contactBottomSheetFragment"
@@ -30,7 +33,7 @@
         tools:layout="@layout/fragment_contact_bottom_sheet" />
     <dialog
         android:id="@+id/chatBottomSheetFragment"
-        android:name="com.tomosia.chatapp.ui.home.chat.ChatBottomSheetFragment"
+        android:name="com.tomosia.chatapp.ui.home.chat.CreateMessageBottomSheetFragment"
         android:label="fragment_chat_bottom_sheet"
         tools:layout="@layout/fragment_chat_bottom_sheet" >
         <action

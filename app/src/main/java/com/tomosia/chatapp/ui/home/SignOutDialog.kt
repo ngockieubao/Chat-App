@@ -27,7 +27,7 @@ class SignOutDialog : DialogFragment() {
                 .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
                     loginRegistViewModel.signOut()
                     chatViewModel.signOut()
-//                    contactViewModel.signOut()
+                    contactViewModel.signOut()
                     navToWelcome()
                     Toast.makeText(requireActivity(), "Signed out", Toast.LENGTH_SHORT).show()
                 })

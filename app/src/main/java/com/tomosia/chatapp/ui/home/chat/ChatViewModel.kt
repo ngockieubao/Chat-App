@@ -31,7 +31,6 @@ class ChatViewModel : ViewModel(), ChatInterface {
     private val _conversation = MutableLiveData<List<Conversation?>>()
     val conversation: LiveData<List<Conversation?>>
         get() = _conversation
-    private var showListConversation = mutableListOf<Conversation>()
 
     private lateinit var idDocument: String
     private val conRef = db.collection("conversation")
@@ -134,11 +133,36 @@ class ChatViewModel : ViewModel(), ChatInterface {
     }
 
 
-    suspend fun readConversation() {
-        val result = conRef.get().await()
-        val resCon = result.toObjects<Conversation>()
-        _conversation.value = resCon
+    suspend fun readConversation(
+        idSender: String
+    ) {
+        // List snapshot document of current user
+        val query =
+            conRef.whereEqualTo(
+                "listUser",
+                idSender
+            ).get().await()
+        if (query.documents.isNotEmpty()) {
+            // get document conversation
+            val doc = query.documents
+            for (item in doc) {
+                idDocument = (item as QueryDocumentSnapshot).id
+            }
+            val queryToObject = query.toObjects<Conversation>()
+            for (i in queryToObject) {
+                if ((i.listUser[0].contains(idSender) || i.listUser[1].contains(idSender))
+                ) {
+                    _conversation.value = queryToObject
+                }
+            }
+        }
+
+////         show all conversation
+//        val result = conRef.get().await()
+//        val resCon = result.toObjects<Conversation>()
+//        _conversation.value = resCon
     }
+
 
     fun checkCurrentUser(): FirebaseUser? {
         val user = auth

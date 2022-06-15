@@ -16,10 +16,11 @@ import com.tomosia.chatapp.model.Conversation
 import com.tomosia.chatapp.model.User
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MessageFragment : Fragment() {
     private lateinit var binding: FragmentMessageBinding
-    private val chatViewModel: ChatViewModel by sharedViewModel()
+    private val chatViewModel: ChatViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

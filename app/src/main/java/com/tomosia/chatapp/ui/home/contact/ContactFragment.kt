@@ -9,11 +9,12 @@ import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentContactBinding
 import com.tomosia.chatapp.model.User
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ContactFragment : Fragment(), CreateMessageInterface {
     private lateinit var binding: FragmentContactBinding
-    private val contactViewModel: ContactViewModel by sharedViewModel()
+    // use viewModel instead of sharedViewModel
+    private val contactViewModel: ContactViewModel by viewModel()
     private lateinit var contactAdapter: ContactAdapter
 
     override fun onCreateView(

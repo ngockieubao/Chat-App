@@ -1,22 +1,22 @@
 package com.tomosia.chatapp.ui.home.chat
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentChatBinding
 import com.tomosia.chatapp.model.Conversation
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChatFragment : Fragment(), ChatInterface {
     private lateinit var binding: FragmentChatBinding
-    private val chatViewModel: ChatViewModel by sharedViewModel()
+    private val chatViewModel: ChatViewModel by viewModel()
     private lateinit var chatAdapter: ChatAdapter
 
     override fun onCreateView(
@@ -27,9 +27,15 @@ class ChatFragment : Fragment(), ChatInterface {
         binding = FragmentChatBinding.inflate(inflater, container, false)
 
         chatAdapter = ChatAdapter(this)
+
+
         lifecycleScope.launch {
-            chatViewModel.readConversation()
+//            chatViewModel.checkCurrentUser()?.uid?.let { chatViewModel.readConversation(it) }
+            chatViewModel.readConversation(chatViewModel.checkCurrentUser()!!.uid)
+//            chatViewModel.readConversation()
+            Log.d(TAG, "onCreateView - readConversation: ran")
         }
+
         chatViewModel.conversation.observe(this.viewLifecycleOwner) {
             if (it == null) return@observe
             chatAdapter.listConversation = it as List<Conversation>
@@ -49,5 +55,9 @@ class ChatFragment : Fragment(), ChatInterface {
 //        val bundle = bundleOf("conversationChosen" to conversation)
 //        findNavController().navigate(R.id.action_chatFragment_to_messageFragment, bundle)
 //        findNavController().navigate(R.id.action_chatFragment_to_messageFragment)
+    }
+
+    companion object {
+        private const val TAG = "ChatFragment"
     }
 }

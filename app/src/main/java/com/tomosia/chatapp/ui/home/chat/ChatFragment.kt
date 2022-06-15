@@ -32,7 +32,7 @@ class ChatFragment : Fragment(), ChatInterface {
         }
         chatViewModel.conversation.observe(this.viewLifecycleOwner) {
             if (it == null) return@observe
-            chatAdapter.listConversation = it
+            chatAdapter.listConversation = it as List<Conversation>
         }
         binding.rcvMessage.adapter = chatAdapter
 

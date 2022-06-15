@@ -33,7 +33,7 @@ class CreateMessageBottomSheetFragment : BottomSheetDialogFragment(), CreateMess
         contactViewModel.readListFriend()
 
         contactViewModel.friends.observe(this.viewLifecycleOwner) {
-            contactAdapter.listFriend = it
+            contactAdapter.listFriend = it as List<User>
         }
 
         binding.tvCancelChatBottomSheet.setOnClickListener {

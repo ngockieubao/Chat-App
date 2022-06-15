@@ -16,13 +16,13 @@ class ContactViewModel : ViewModel() {
     private val db = Firebase.firestore
     private val auth = Firebase.auth.currentUser
 
-    private val _users = MutableLiveData<List<User>>()
-    val users: LiveData<List<User>>
+    private val _users = MutableLiveData<List<User?>>()
+    val users: LiveData<List<User?>>
         get() = _users
     private val listUserToObject = mutableListOf<User>()
 
-    private val _friends = MutableLiveData<List<User>>()
-    val friends: LiveData<List<User>>
+    private val _friends = MutableLiveData<List<User?>>()
+    val friends: LiveData<List<User?>>
         get() = _friends
     private val listFriendShow = mutableListOf<User>()
     private var listFriendRemoved = mutableListOf<User>()
@@ -108,6 +108,13 @@ class ContactViewModel : ViewModel() {
             userRef.document(curUserID).update("listFriend", FieldValue.arrayUnion(user.userID))
             userRef.document(friendID).update("listFriend", FieldValue.arrayUnion(curUserID))
         }
+    }
+
+    // Sign-out
+    fun signOut() {
+        Firebase.auth.signOut()
+        _users.value = null
+        _friends.value = null
     }
 
     companion object {

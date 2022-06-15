@@ -28,9 +28,10 @@ class ChatViewModel : ViewModel(), ChatInterface {
     val message: LiveData<Message>
         get() = _message
 
-    private val _conversation = MutableLiveData<List<Conversation>>()
-    val conversation: LiveData<List<Conversation>>
+    private val _conversation = MutableLiveData<List<Conversation?>>()
+    val conversation: LiveData<List<Conversation?>>
         get() = _conversation
+    private var showListConversation = mutableListOf<Conversation>()
 
     private lateinit var idDocument: String
     private val conRef = db.collection("conversation")
@@ -114,19 +115,24 @@ class ChatViewModel : ViewModel(), ChatInterface {
             ).get().await()
         if (query.documents.isNotEmpty()) {
             // get document conversation
-            val doc = query.documents.first()
-            idDocument = (doc as QueryDocumentSnapshot).id
+            val doc = query.documents
+            for (item in doc) {
+                idDocument = (item as QueryDocumentSnapshot).id
+            }
             val queryToObject = query.toObjects<Conversation>()
             for (i in queryToObject) {
-                if (i.listUser.contains(idSender) && i.listUser.contains(idReceiver)) {
+                if ((i.listUser[0].contains(idSender) && i.listUser[1].contains(idReceiver))
+                    || (i.listUser[1].contains(idSender) && i.listUser[0].contains(idReceiver))
+                ) {
                     // TODO nav to conversation
                     clickToChat(queryToObject.first())
-//                    sendMessage(idSender, idReceiver, null)
+//                    sendMessage(idSender, idReceiver, null, "unknown")
                 }
             }
         } else
             createNewConversation(idSender, idReceiver, "This is first message", nameConversation)
     }
+
 
     suspend fun readConversation() {
         val result = conRef.get().await()
@@ -143,6 +149,12 @@ class ChatViewModel : ViewModel(), ChatInterface {
             // no user is signed in
             return null
         }
+    }
+
+    // Sign-out
+    fun signOut() {
+        Firebase.auth.signOut()
+        _conversation.value = null
     }
 
     companion object {

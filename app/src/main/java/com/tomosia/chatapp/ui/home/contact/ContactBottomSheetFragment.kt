@@ -28,7 +28,7 @@ class ContactBottomSheetFragment : BottomSheetDialogFragment(), AddFriendInterfa
 
         contactViewModel.users.observe(this.viewLifecycleOwner) {
             if (it != null) {
-                addFriendAdapter.listUser = it
+                addFriendAdapter.listUser = it as List<User>
             }
         }
 

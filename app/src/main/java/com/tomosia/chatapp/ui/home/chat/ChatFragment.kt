@@ -32,7 +32,7 @@ class ChatFragment : Fragment(), ChatInterface {
         }
         chatViewModel.conversation.observe(this.viewLifecycleOwner) {
             if (it == null) return@observe
-            chatAdapter.listConversation = it
+            chatAdapter.listConversation = it as List<Conversation>
         }
         binding.rcvMessage.adapter = chatAdapter
 
@@ -48,5 +48,6 @@ class ChatFragment : Fragment(), ChatInterface {
     override fun clickToChat(conversation: Conversation) {
 //        val bundle = bundleOf("conversationChosen" to conversation)
 //        findNavController().navigate(R.id.action_chatFragment_to_messageFragment, bundle)
+//        findNavController().navigate(R.id.action_chatFragment_to_messageFragment)
     }
 }

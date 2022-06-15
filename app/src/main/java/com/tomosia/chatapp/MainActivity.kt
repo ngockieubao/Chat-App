@@ -4,9 +4,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import com.tomosia.chatapp.databinding.ActivityMainBinding
+import com.tomosia.chatapp.ui.home.chat.ChatViewModel
+import com.tomosia.chatapp.ui.home.contact.ContactViewModel
+import com.tomosia.chatapp.ui.login.LoginRegistViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private val contactViewModel: ContactViewModel by viewModel<ContactViewModel>()
+    private val chatViewModel: ChatViewModel by viewModel<ChatViewModel>()
+    private val loginRegistViewModel: LoginRegistViewModel by viewModel<LoginRegistViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

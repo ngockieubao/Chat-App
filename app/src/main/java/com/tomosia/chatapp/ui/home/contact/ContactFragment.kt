@@ -26,7 +26,7 @@ class ContactFragment : Fragment(), CreateMessageInterface {
         contactViewModel.readListFriend()
         contactAdapter = ContactAdapter(this)
         contactViewModel.friends.observe(this.viewLifecycleOwner) {
-            contactAdapter.listFriend = it
+            contactAdapter.listFriend = it as List<User>
         }
 
         binding.rcvHomeContact.adapter = contactAdapter

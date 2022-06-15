@@ -3,6 +3,7 @@ package com.tomosia.chatapp.ui.home.chat
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +36,6 @@ class MessageFragment : Fragment() {
         val bundleUserChoose = arguments?.getSerializable("userChoose") as User
         binding.tvChatUsername.text = bundleUserChoose.username
 
-//        val bundleConversationChosen = arguments?.getSerializable("conversationChosen") as Conversation
 
         binding.edtTextMessage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -66,12 +66,14 @@ class MessageFragment : Fragment() {
                     chatViewModel.sendMessage(
                         idSender,
                         "${bundleUserChoose.userID}",
-                        message
+                        message,
+                        "unknown"
                     )
                 }
             }
             binding.edtTextMessage.text.clear()
         }
+
 
         return binding.root
     }

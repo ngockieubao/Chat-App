@@ -8,12 +8,17 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import com.tomosia.chatapp.R
+import com.tomosia.chatapp.ui.home.chat.ChatViewModel
+import com.tomosia.chatapp.ui.home.contact.ContactViewModel
 import com.tomosia.chatapp.ui.login.LoginRegistViewModel
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.lang.IllegalStateException
 
 class SignOutDialog : DialogFragment() {
     private val loginRegistViewModel: LoginRegistViewModel by sharedViewModel()
+    private val chatViewModel: ChatViewModel by viewModel()
+    private val contactViewModel: ContactViewModel by viewModel()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -21,6 +26,8 @@ class SignOutDialog : DialogFragment() {
             builder.setMessage("Are you sure to log out?")
                 .setPositiveButton("Yes", DialogInterface.OnClickListener { dialog, id ->
                     loginRegistViewModel.signOut()
+                    chatViewModel.signOut()
+//                    contactViewModel.signOut()
                     navToWelcome()
                     Toast.makeText(requireActivity(), "Signed out", Toast.LENGTH_SHORT).show()
                 })

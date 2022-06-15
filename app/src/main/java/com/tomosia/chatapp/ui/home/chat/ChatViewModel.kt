@@ -18,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.tasks.await
 
-class ChatViewModel : ViewModel() {
+class ChatViewModel : ViewModel(), ChatInterface {
     private val db = Firebase.firestore
     private val auth = Firebase.auth.currentUser
     private val job = Job()
@@ -28,9 +28,10 @@ class ChatViewModel : ViewModel() {
     val message: LiveData<Message>
         get() = _message
 
-    private val _conversation = MutableLiveData<List<Conversation>>()
-    val conversation: LiveData<List<Conversation>>
+    private val _conversation = MutableLiveData<List<Conversation?>>()
+    val conversation: LiveData<List<Conversation?>>
         get() = _conversation
+    private var showListConversation = mutableListOf<Conversation>()
 
     private lateinit var idDocument: String
     private val conRef = db.collection("conversation")
@@ -38,12 +39,14 @@ class ChatViewModel : ViewModel() {
     suspend fun sendMessage(
         idSender: String,
         idReceiver: String,
-        message: String?
+        message: String?,
+        nameConversation: String
     ) {
         val conversation = hashMapOf(
             "lastMessage" to message,
             "lastMessageTime" to Timestamp.now(),
-            "listUser" to arrayListOf(idSender, idReceiver)
+            "listUser" to arrayListOf(idSender, idReceiver),
+            "nameConversation" to nameConversation
         )
 
         val message = hashMapOf(
@@ -104,7 +107,7 @@ class ChatViewModel : ViewModel() {
         idReceiver: String,
         nameConversation: String
     ) {
-        // List snapshot document cua current user
+        // List snapshot document of current user
         val query =
             conRef.whereEqualTo(
                 "listUser",
@@ -112,17 +115,24 @@ class ChatViewModel : ViewModel() {
             ).get().await()
         if (query.documents.isNotEmpty()) {
             // get document conversation
-            val doc = query.documents.first()
-            idDocument = (doc as QueryDocumentSnapshot).id
+            val doc = query.documents
+            for (item in doc) {
+                idDocument = (item as QueryDocumentSnapshot).id
+            }
             val queryToObject = query.toObjects<Conversation>()
             for (i in queryToObject) {
-                if (i.listUser.contains(idSender) && i.listUser.contains(idReceiver)) {
-                    sendMessage(idSender, idReceiver, null)
+                if ((i.listUser[0].contains(idSender) && i.listUser[1].contains(idReceiver))
+                    || (i.listUser[1].contains(idSender) && i.listUser[0].contains(idReceiver))
+                ) {
+                    // TODO nav to conversation
+                    clickToChat(queryToObject.first())
+//                    sendMessage(idSender, idReceiver, null, "unknown")
                 }
             }
         } else
             createNewConversation(idSender, idReceiver, "This is first message", nameConversation)
     }
+
 
     suspend fun readConversation() {
         val result = conRef.get().await()
@@ -141,7 +151,16 @@ class ChatViewModel : ViewModel() {
         }
     }
 
+    // Sign-out
+    fun signOut() {
+        Firebase.auth.signOut()
+        _conversation.value = null
+    }
+
     companion object {
         private const val TAG = "ChatViewModel"
+    }
+
+    override fun clickToChat(conversation: Conversation) {
     }
 }

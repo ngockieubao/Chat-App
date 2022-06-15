@@ -101,11 +101,12 @@ class ContactViewModel : ViewModel() {
     // add friend to lisFriend
     fun addFriend(user: User?) {
         val curUserID = checkCurrentUser()?.uid
-//        val friendID =
+        val friendID = user?.userID
         // update listFriend of current user
         // TODO add friend to current user ID
-        if (curUserID != null) {
-            userRef.document(curUserID).update("listFriend", FieldValue.arrayUnion(user?.userID))
+        if (curUserID != null && friendID != null) {
+            userRef.document(curUserID).update("listFriend", FieldValue.arrayUnion(user.userID))
+            userRef.document(friendID).update("listFriend", FieldValue.arrayUnion(curUserID))
         }
     }
 

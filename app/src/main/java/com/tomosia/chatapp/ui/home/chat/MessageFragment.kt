@@ -67,7 +67,7 @@ class MessageFragment : Fragment() {
                         idSender,
                         "${bundleUserChoose.userID}",
                         message,
-                        "${bundleUserChoose.username}"
+                        "unknown"
                     )
                 }
             }

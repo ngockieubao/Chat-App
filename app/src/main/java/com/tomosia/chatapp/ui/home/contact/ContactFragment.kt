@@ -10,9 +10,9 @@ import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentContactBinding
 import com.tomosia.chatapp.model.User
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 class ContactFragment : Fragment(), CreateMessageInterface {
     private lateinit var binding: FragmentContactBinding
+
     // use viewModel instead of sharedViewModel
     private val contactViewModel: ContactViewModel by viewModel()
     private lateinit var contactAdapter: ContactAdapter
@@ -29,7 +29,6 @@ class ContactFragment : Fragment(), CreateMessageInterface {
         contactViewModel.friends.observe(this.viewLifecycleOwner) {
             contactAdapter.listFriend = it as List<User>
         }
-
         binding.rcvHomeContact.adapter = contactAdapter
 
         val fab: View = binding.fabContact
@@ -40,6 +39,6 @@ class ContactFragment : Fragment(), CreateMessageInterface {
         return binding.root
     }
 
-    override fun clickToCreateMessage(user: User) {
+    override fun clickToCreateMessage(user: User?) {
     }
 }

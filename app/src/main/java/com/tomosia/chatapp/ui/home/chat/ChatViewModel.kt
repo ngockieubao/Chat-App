@@ -106,9 +106,10 @@ class ChatViewModel : ViewModel(), ChatInterface {
         idReceiver: String,
         nameConversation: String
     ) {
-        // List snapshot document of current user
+        // List snapshot document(conversation)
         val query =
-            conRef.whereEqualTo(
+            // check conversation existed
+            conRef.whereArrayContainsAny(
                 "listUser",
                 listOf(idSender, idReceiver)
             ).get().await()
@@ -120,11 +121,10 @@ class ChatViewModel : ViewModel(), ChatInterface {
             }
             val queryToObject = query.toObjects<Conversation>()
             for (i in queryToObject) {
-                if ((i.listUser[0].contains(idSender) && i.listUser[1].contains(idReceiver))
-                    || (i.listUser[1].contains(idSender) && i.listUser[0].contains(idReceiver))
+                if (i.listUser.contains(idSender) && i.listUser.contains(idReceiver)
                 ) {
                     // TODO nav to conversation
-                    clickToChat(queryToObject.first())
+                    clickToChat(i)
 //                    sendMessage(idSender, idReceiver, null, "unknown")
                 }
             }
@@ -136,9 +136,9 @@ class ChatViewModel : ViewModel(), ChatInterface {
     suspend fun readConversation(
         idSender: String
     ) {
-        // List snapshot document of current user
+        // filter snapshot document(conversation) of current user
         val query =
-            conRef.whereEqualTo(
+            conRef.whereArrayContains(
                 "listUser",
                 idSender
             ).get().await()
@@ -156,11 +156,6 @@ class ChatViewModel : ViewModel(), ChatInterface {
                 }
             }
         }
-
-////         show all conversation
-//        val result = conRef.get().await()
-//        val resCon = result.toObjects<Conversation>()
-//        _conversation.value = resCon
     }
 
 

@@ -11,7 +11,7 @@ import com.tomosia.chatapp.model.User
 
 class AddFriendAdapter(val addFriendInterface: AddFriendInterface) : RecyclerView.Adapter<AddFriendAdapter.AddFriendViewHolder>() {
 
-    var listUser = listOf<User>()
+    var listAddFriend = listOf<User>()
         @SuppressLint("NotifyDataSetChanged")
         set(value) {
             field = value
@@ -32,7 +32,6 @@ class AddFriendAdapter(val addFriendInterface: AddFriendInterface) : RecyclerVie
             )
 
             rcvHomeContactBottomSheetBinding.imageViewAddFriend.setOnClickListener {
-                Log.d("addfriend", "clicked")
                 addFriendInterface.clickToAddFriend(item)
                 rcvHomeContactBottomSheetBinding.imageViewAddFriend.setImageResource(R.mipmap.ic_accept_64)
             }
@@ -48,10 +47,10 @@ class AddFriendAdapter(val addFriendInterface: AddFriendInterface) : RecyclerVie
     }
 
     override fun onBindViewHolder(holder: AddFriendViewHolder, position: Int) {
-        holder.bind(listUser[position])
+        holder.bind(listAddFriend[position])
     }
 
     override fun getItemCount(): Int {
-        return listUser.size
+        return listAddFriend.size
     }
 }

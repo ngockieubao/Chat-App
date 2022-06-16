@@ -27,15 +27,9 @@ class ChatFragment : Fragment(), ChatInterface {
         binding = FragmentChatBinding.inflate(inflater, container, false)
 
         chatAdapter = ChatAdapter(this)
-
-
         lifecycleScope.launch {
-//            chatViewModel.checkCurrentUser()?.uid?.let { chatViewModel.readConversation(it) }
-            chatViewModel.readConversation(chatViewModel.checkCurrentUser()!!.uid)
-//            chatViewModel.readConversation()
-            Log.d(TAG, "onCreateView - readConversation: ran")
+            chatViewModel.checkCurrentUser()?.uid?.let { chatViewModel.readConversation(it) }
         }
-
         chatViewModel.conversation.observe(this.viewLifecycleOwner) {
             if (it == null) return@observe
             chatAdapter.listConversation = it as List<Conversation>
@@ -55,6 +49,8 @@ class ChatFragment : Fragment(), ChatInterface {
 //        val bundle = bundleOf("conversationChosen" to conversation)
 //        findNavController().navigate(R.id.action_chatFragment_to_messageFragment, bundle)
 //        findNavController().navigate(R.id.action_chatFragment_to_messageFragment)
+        findNavController().navigate(ChatFragmentDirections.actionChatFragmentToMessageFragment(null, conversation))
+        Log.d(TAG, "clickToChat: $conversation")
     }
 
     companion object {

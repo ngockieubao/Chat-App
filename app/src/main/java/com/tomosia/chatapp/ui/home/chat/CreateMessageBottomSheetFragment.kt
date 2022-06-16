@@ -4,21 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentChatBottomSheetBinding
 import com.tomosia.chatapp.model.User
 import com.tomosia.chatapp.ui.home.contact.CreateMessageInterface
 import com.tomosia.chatapp.ui.home.contact.ContactAdapter
 import com.tomosia.chatapp.ui.home.contact.ContactViewModel
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CreateMessageBottomSheetFragment : BottomSheetDialogFragment(), CreateMessageInterface {
     private lateinit var binding: FragmentChatBottomSheetBinding
-    private val contactViewModel: ContactViewModel by sharedViewModel()
+
+    // use viewModel instead of sharedViewModel
+    private val contactViewModel: ContactViewModel by viewModel()
     private lateinit var contactAdapter: ContactAdapter
 
     override fun onCreateView(
@@ -43,8 +42,7 @@ class CreateMessageBottomSheetFragment : BottomSheetDialogFragment(), CreateMess
         return binding.root
     }
 
-    override fun clickToCreateMessage(user: User) {
-        val bundle = bundleOf("userChoose" to user)
-        findNavController().navigate(R.id.action_chatBottomSheetFragment_to_messageFragment, bundle)
+    override fun clickToCreateMessage(user: User?) {
+        findNavController().navigate(CreateMessageBottomSheetFragmentDirections.actionChatBottomSheetFragmentToMessageFragment(user, null))
     }
 }

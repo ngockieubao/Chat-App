@@ -3,24 +3,23 @@ package com.tomosia.chatapp.ui.home.chat
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.tomosia.chatapp.R
 import com.tomosia.chatapp.databinding.FragmentMessageBinding
-import com.tomosia.chatapp.model.Conversation
-import com.tomosia.chatapp.model.User
 import kotlinx.coroutines.launch
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MessageFragment : Fragment() {
     private lateinit var binding: FragmentMessageBinding
     private val chatViewModel: ChatViewModel by viewModel()
+    private val argsUser by navArgs<MessageFragmentArgs>()
+    private val argsConversation by navArgs<MessageFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,9 +33,9 @@ class MessageFragment : Fragment() {
             findNavController().navigate(R.id.action_messageFragment_to_chatFragment)
         }
 
-        val bundleUserChoose = arguments?.getSerializable("userChoose") as User
-        binding.tvChatUsername.text = bundleUserChoose.username
-
+        val bundleConversationChoose = argsConversation.conversation
+        val bundleUserChoose = argsUser.user
+        binding.tvChatUsername.text = bundleUserChoose?.username
 
         binding.edtTextMessage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -51,11 +50,11 @@ class MessageFragment : Fragment() {
 
         // Conversation
         lifecycleScope.launch {
-            chatViewModel.checkCurrentUser()?.let {
+            chatViewModel.checkCurrentUser()?.let { idSender ->
                 chatViewModel.checkConversation(
-                    it.uid,
-                    "${bundleUserChoose.userID}",
-                    "${bundleUserChoose.username}"
+                    idSender.uid,
+                    "${bundleUserChoose?.userID}",
+                    "unknown create"
                 )
             }
         }
@@ -66,9 +65,10 @@ class MessageFragment : Fragment() {
                 chatViewModel.checkCurrentUser()?.uid?.let { idSender ->
                     chatViewModel.sendMessage(
                         idSender,
-                        "${bundleUserChoose.userID}",
+                        "${bundleUserChoose?.userID}",
                         message,
-                        "unknown"
+                        // username sent last message
+                        "unknown send"
                     )
                 }
             }

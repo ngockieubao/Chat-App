@@ -24,8 +24,8 @@ class ContactViewModel : ViewModel() {
     private val _friends = MutableLiveData<List<User?>>()
     val friends: LiveData<List<User?>>
         get() = _friends
-    private val listFriendShow = mutableListOf<User>()
-    private var listFriendRemoved = mutableListOf<User>()
+    private var listFriendShow = mutableListOf<User>()
+    private var listFriendRemove = mutableListOf<User>()
 
     private val userRef = db.collection("user")
 
@@ -40,10 +40,11 @@ class ContactViewModel : ViewModel() {
         }
     }
 
-    fun readListUser() {
+    fun readListAddFriend() {
         userRef.get()
             .addOnSuccessListener { result ->
                 listUserToObject.clear()
+                // Get list user
                 for (document in result) {
                     val userToObject = document.toObject<User>()
                     // Exclude current user from list user
@@ -51,12 +52,52 @@ class ContactViewModel : ViewModel() {
                         listUserToObject.add(userToObject)
                     }
                 }
-                listFriendRemoved = listUserToObject
-                // Remove list friend from list user
-                _friends.value?.let {
-                    listFriendRemoved.removeAll(it)
+                listFriendRemove = listUserToObject
+//                // Remove list friend from list user
+//                _friends.value?.let {
+//                    listFriendRemove.removeAll(it)
+//                }
+//                _users.value = listFriendRemove
+
+                // get list friend
+                checkCurrentUser()?.uid?.let {
+                    userRef.document(it).get()
+                        .addOnSuccessListener { result ->
+                            val userToObject = result.toObject<User>()
+                            val listFriendCurUser = userToObject?.listFriend
+                            if (listFriendCurUser != null) {
+                                Log.d(TAG, "readListAddFriend = $listFriendCurUser")
+                                val listFriendSize = listFriendCurUser.size
+                                for (i in 0..listFriendSize.minus(1)) {
+                                    userRef.document(listFriendCurUser[i]).get()
+                                        .addOnSuccessListener { resultUser ->
+                                            val userDataToObject = resultUser.toObject<User>()
+                                            if (userDataToObject != null) {
+                                                listFriendShow.add(userDataToObject)
+//                                                if (i == listFriendSize.minus(1)) {
+//                                                    _users.value?.let {
+//                                                        listFriendRemove.removeAll(listFriendShow)
+//                                                        Log.d(TAG, "readListAddFriend - get list friend success: $listFriendShow")
+//                                                    }
+////                                                    _users.value = listFriendRemove.removeAll(listFriendShow)
+//                                                }
+//                                                Log.d(TAG, "readListAddFriend - get list friend failed")
+                                            }
+                                        }
+                                        .addOnFailureListener { exception ->
+                                            Log.d(TAG, "get user in list friend fail: ${exception.message}")
+                                        }
+                                }
+                                _users.value?.let {
+                                    listFriendRemove.removeAll(listFriendShow)
+                                    Log.d(TAG, "readListAddFriend - get list friend success: $listFriendShow")
+                                }
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.d(TAG, "readListFriend fail: ${exception.message}")
+                        }
                 }
-                _users.value = listFriendRemoved
             }
             .addOnFailureListener { exception ->
                 Log.w(TAG, "readUser: Error getting documents", exception)
@@ -81,13 +122,14 @@ class ContactViewModel : ViewModel() {
     }
 
     private fun showListFriend(listFriendToObject: List<String>) {
-        for (i in 0..listFriendToObject.size.minus(1)) {
+        val listFriendSize = listFriendToObject.size
+        for (i in 0..listFriendSize.minus(1)) {
             userRef.document(listFriendToObject[i]).get()
                 .addOnSuccessListener { resultUser ->
                     val userDataToObject = resultUser.toObject<User>()
                     if (userDataToObject != null) {
                         listFriendShow.add(userDataToObject)
-                        if (i == listFriendToObject.size.minus(1)) {
+                        if (i == listFriendSize.minus(1)) {
                             _friends.value = listFriendShow
                         }
                     }

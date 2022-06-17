@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.tomosia.chatapp.model.Conversation
@@ -24,8 +26,8 @@ class ChatViewModel : ViewModel(), ChatInterface {
     private val job = Job()
     private val scope: CoroutineScope = CoroutineScope(job + Dispatchers.IO)
 
-    private val _message = MutableLiveData<Message>()
-    val message: LiveData<Message>
+    private val _message = MutableLiveData<List<Message>>()
+    val message: LiveData<List<Message>>
         get() = _message
 
     private val _conversation = MutableLiveData<List<Conversation?>>()
@@ -132,7 +134,6 @@ class ChatViewModel : ViewModel(), ChatInterface {
             createNewConversation(idSender, idReceiver, "This is first message", nameConversation)
     }
 
-
     suspend fun readConversation(
         idSender: String
     ) {
@@ -150,7 +151,7 @@ class ChatViewModel : ViewModel(), ChatInterface {
             }
             val queryToObject = query.toObjects<Conversation>()
             for (i in queryToObject) {
-                if ((i.listUser[0].contains(idSender) || i.listUser[1].contains(idSender))
+                if ((i.listUser.contains(idSender))
                 ) {
                     _conversation.value = queryToObject
                 }
@@ -158,6 +159,34 @@ class ChatViewModel : ViewModel(), ChatInterface {
         }
     }
 
+    suspend fun readMessage(
+        idSender: String
+    ) {
+        // filter snapshot document(conversation) of current user
+        val queryConversation =
+            conRef.whereArrayContains(
+                "listUser",
+                idSender
+            ).get().await()
+        if (queryConversation.documents.isNotEmpty()) {
+            // get document conversation
+            val doc = queryConversation.documents
+            for (item in doc) {
+                idDocument = (item as QueryDocumentSnapshot).id
+            }
+            val queryMessage = conRef.document(idDocument).collection("message").get().await()
+            if (queryMessage.documents.isNotEmpty()) {
+                // get document conversation
+                val doc = queryMessage.documents
+                for (i in doc) {
+                    // document-id message
+                    val abc = (i as QueryDocumentSnapshot).id
+                    Log.d(TAG, "readMessage - list: $abc")
+
+                }
+            }
+        }
+    }
 
     fun checkCurrentUser(): FirebaseUser? {
         val user = auth

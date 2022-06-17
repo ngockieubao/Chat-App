@@ -36,7 +36,6 @@ class ChatFragment : Fragment(), ChatInterface {
         }
         binding.rcvMessage.adapter = chatAdapter
 
-        chatViewModel.checkCurrentUser()
         val fab: View = binding.fabChat
         fab.setOnClickListener { view ->
             findNavController().navigate(R.id.action_chatFragment_to_chatBottomSheetFragment)
@@ -46,11 +45,7 @@ class ChatFragment : Fragment(), ChatInterface {
     }
 
     override fun clickToChat(conversation: Conversation) {
-//        val bundle = bundleOf("conversationChosen" to conversation)
-//        findNavController().navigate(R.id.action_chatFragment_to_messageFragment, bundle)
-//        findNavController().navigate(R.id.action_chatFragment_to_messageFragment)
         findNavController().navigate(ChatFragmentDirections.actionChatFragmentToMessageFragment(null, conversation))
-        Log.d(TAG, "clickToChat: $conversation")
     }
 
     companion object {

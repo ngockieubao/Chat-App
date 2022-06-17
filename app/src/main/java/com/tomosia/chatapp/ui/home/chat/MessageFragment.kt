@@ -20,6 +20,8 @@ class MessageFragment : Fragment() {
     private val chatViewModel: ChatViewModel by viewModel()
     private val argsUser by navArgs<MessageFragmentArgs>()
     private val argsConversation by navArgs<MessageFragmentArgs>()
+    private lateinit var currentMessageAdapter: CurrentMessageAdapter
+    private lateinit var friendMessageAdapter: FriendMessageAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,13 +30,14 @@ class MessageFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentMessageBinding.inflate(inflater, container, false)
         var message: String? = null
+        val bundleConversationChoose = argsConversation.conversation
+        val bundleUserChoose = argsUser.user
+        currentMessageAdapter = CurrentMessageAdapter()
 
         binding.imageViewMessageBack.setOnClickListener {
             findNavController().navigate(R.id.action_messageFragment_to_chatFragment)
         }
 
-        val bundleConversationChoose = argsConversation.conversation
-        val bundleUserChoose = argsUser.user
         binding.tvChatUsername.text = bundleUserChoose?.username
 
         binding.edtTextMessage.addTextChangedListener(object : TextWatcher {
@@ -75,6 +78,12 @@ class MessageFragment : Fragment() {
             binding.edtTextMessage.text.clear()
         }
 
+        lifecycleScope.launch {
+            chatViewModel.checkCurrentUser()?.uid?.let { chatViewModel.readMessage(it) }
+        }
+//        chatViewModel.conversation.observe(this.viewLifecycleOwner) {
+//            currentMessageAdapter.submitList(it)
+//        }
 
         return binding.root
     }

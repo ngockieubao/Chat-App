@@ -5,15 +5,17 @@ import java.io.Serializable
 
 data class Message(
     val avatar: String?,
-    val titleMessage: String,
+    val idSender: String,
     val contentMessage: String,
-    val lastTimeMessage: Timestamp
+    val lastTimeMessage: Timestamp?
 ) : Serializable {
-    constructor() : this("", "", "", Timestamp.now()) {
+    constructor() : this(
+        "", "", "", null
+    ) {
         fun toHashMap(): HashMap<String, Any?> {
             return hashMapOf(
                 "avatar" to avatar,
-                "titleMessage" to titleMessage,
+                "idSender" to idSender,
                 "contentMessage" to contentMessage,
                 "lastTimeMessage" to lastTimeMessage
             )
